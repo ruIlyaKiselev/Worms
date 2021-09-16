@@ -5,10 +5,10 @@ namespace ConsoleApp1
     public static class GameContract
     {
         // Game field properties 
-        public static readonly int StartX = -2;
-        public static readonly int FinishX = 2;
-        public static readonly int StartY = -2;
-        public static readonly int FinishY = 2;
+        public static readonly int StartX = -4;
+        public static readonly int FinishX = 4;
+        public static readonly int StartY = -4;
+        public static readonly int FinishY = 4;
         
         public static readonly int Height = FinishX - StartX + 1;
         public static readonly int Width = FinishY - StartY + 1;

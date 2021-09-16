@@ -18,7 +18,7 @@ namespace ConsoleApp1
         {
             _currentPosition = currentPosition;
             _name = name;
-            _wormLogic = new ClockwiseRotationLogic();
+            _wormLogic = new FoodFindLogic();
         }
         
         public int Health

@@ -39,7 +39,7 @@ namespace ConsoleApp1
             return _field[translatedCoords.Item1, translatedCoords.Item2];
         }
 
-        private (int, int) TranslateCoord((int, int) coord)
+        public static (int, int) TranslateCoord((int, int) coord)
         {
             return (coord.Item1 - GameContract.StartX, -coord.Item2 + GameContract.FinishY);
         }
