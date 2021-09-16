@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "zi4ETICKqIbS75ZIay78WYYgrjwHuH1raoZutmpxiHSaQCX18aOVcmvgwv7RHwHkQZOBfs0l1mKVFP61YGZkXA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ruily_g40rtk5\\RiderProjects\\ConsoleApp1\\ConsoleApp1\\ConsoleApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
