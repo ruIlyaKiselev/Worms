@@ -2,6 +2,6 @@
 {
     public interface IWormLogic
     {
-        public void Decide(Worm worm, GameContract.FieldObjects[,] gameField);
+        public void Decide(Worm worm, GameField gameField);
     }
 }

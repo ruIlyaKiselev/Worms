@@ -30,7 +30,7 @@ namespace ConsoleApp1.WormsLogic
             }
         }
         
-        public void Decide(Worm worm, GameContract.FieldObjects[,] gameField)
+        public void Decide(Worm worm, GameField gameField)
         {
             var action = Actions.Move;
             var direction = _directionsList[_stepsCounter];

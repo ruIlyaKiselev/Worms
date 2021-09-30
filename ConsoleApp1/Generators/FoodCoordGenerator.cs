@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ConsoleApp1.Generators
 {
@@ -8,11 +6,15 @@ namespace ConsoleApp1.Generators
     {
         private static readonly Random _random = new Random(DateTime.Now.Second);
         
+        /*
+         * функция генерации координат, которые гарантированно не выходят за пределы массива-игрового поля
+         * и не совпадают с коордитатами другой еды на игровом поле
+         */
         public static (int, int) GenerateFoodCoord(ICheckCeil gameField)
         {
             var coordForResult = NextCoordinate();
             
-            while (gameField.CheckCeil((coordForResult.Item1, coordForResult.Item2)) == GameContract.FieldObjects.Food)
+            while (gameField.CheckCeil((coordForResult.Item1, coordForResult.Item2)) == FieldObjects.Food)
             {
                 coordForResult = NextCoordinate();
             }
@@ -20,6 +22,9 @@ namespace ConsoleApp1.Generators
             return coordForResult;
         }
         
+        /*
+         * функция генерации координат, которые гарантированно не выходят за пределы массива-игрового поля
+         */
         private static (int, int) NextCoordinate()
         {
             var pair = NextNormalPair();
@@ -32,12 +37,19 @@ namespace ConsoleApp1.Generators
             return pair;
         }
         
+        /*
+         * функция проверки сгенерированных координат на выход за пределы массива, который хранит информацию
+         * об игровом поле
+         */
         public static bool ValidateCoordInBounds((int, int) coords)
         {
             return (coords.Item1 >= GameContract.StartX && coords.Item1 <= GameContract.FinishX) 
                    && (coords.Item2 >= GameContract.StartY && coords.Item2 <= GameContract.FinishY);
         }
         
+        /*
+         * функция взятия пары случайных координат из нормального распределения; генерируются независимо друг от друга
+         */
         private static (int, int) NextNormalPair()
         {
             return (
@@ -46,6 +58,9 @@ namespace ConsoleApp1.Generators
             );
         }
         
+        /*
+         * функция генерации числа из нормального распределения в с параметрами соответствии с заданием
+         */
         private static int NextNormal(Random r, double mu = 0, double sigma = 1)
         {
             var u1 = r.NextDouble();

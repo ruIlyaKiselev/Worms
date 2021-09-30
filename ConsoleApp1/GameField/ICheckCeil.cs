@@ -2,6 +2,6 @@
 {
     public interface ICheckCeil
     {
-        public GameContract.FieldObjects CheckCeil((int, int) coord);
+        public FieldObjects CheckCeil((int, int) coord);
     }
 }

@@ -69,7 +69,7 @@ namespace ConsoleApp1
             }
         }
 
-        public (Actions, Directions) GetIntent(GameContract.FieldObjects[,] gameField)
+        public (Actions, Directions) GetIntent(GameField gameField)
         {
             _wormLogic.Decide(this, gameField);
             Console.WriteLine(_actionsIntent + " " + _directionsIntent);
