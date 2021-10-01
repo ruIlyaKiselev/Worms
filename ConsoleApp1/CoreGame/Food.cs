@@ -27,7 +27,8 @@
          */
         public bool DecreaseHealth()
         {
-            if (--_health <= 0)
+            _health -= 1;
+            if (_health <= 0)
             {
                 _isDeath = true;
             }

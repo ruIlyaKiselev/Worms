@@ -6,8 +6,8 @@ namespace ConsoleApp1
 {
     public class Worm
     {
-        private int _health = 10;
-        private bool _isDeath = false;
+        private int _health;
+        private bool _isDeath;
         private Directions _directionsIntent = Directions.None;
         private Actions _actionsIntent = Actions.None;
         private IWormLogic _wormLogic;
@@ -16,58 +16,18 @@ namespace ConsoleApp1
 
         public Worm((int, int) currentPosition, string name)
         {
+            _health = 10;
             _currentPosition = currentPosition;
             _name = name;
             _wormLogic = new FoodFindLogic();
         }
         
-        public int Health
-        {
-            get => _health;
-            set 
-            {
-                if (value > 0)
-                {
-                    _health = value;
-                }
-            }
-        }
+        public int Health { get; set; }
+        public Actions ActionsIntent { get; set; }
+        public Directions DirectionIntent { get; set; }
+        public (int, int) CurrentPosition { get; set; }
 
-        public Actions ActionsIntent
-        {
-            get => _actionsIntent;
-            set
-            {
-                _actionsIntent = value;
-            }
-        }
-        
-        public Directions DirectionIntent
-        {
-            get => _directionsIntent;
-            set
-            {
-                _directionsIntent = value;
-            }
-        }
-
-        public (int, int) CurrentPosition
-        {
-            get => _currentPosition;
-            set
-            {
-                _currentPosition = value;
-            }
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-            }
-        }
+        public string Name { get; set; }
 
         public (Actions, Directions) GetIntent(GameField gameField)
         {
@@ -76,14 +36,12 @@ namespace ConsoleApp1
             return (_actionsIntent, _directionsIntent);
         }
 
-        public bool IsDeath()
-        {
-            return _isDeath;
-        }
+        public bool IsDeath { get; set; }
         
         public bool DecreaseHealth()
         {
-            if (--_health <= 0)
+            _health -= 1;
+            if (_health <= 0)
             {
                 _isDeath = true;
             }

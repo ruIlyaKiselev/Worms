@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConsoleApp1
 {
-    public class GameField: ICheckCeil
+    public class GameField: ICheckCeil, ICloneable
     {
         private FieldObjects[,] _field = new FieldObjects[GameContract.Width, GameContract.Height];
         private List<Food> _food = new List<Food>();
@@ -66,5 +66,10 @@ namespace ConsoleApp1
 
         public List<Food> Foods => _food;
         public List<Worm> Worms => _worms;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

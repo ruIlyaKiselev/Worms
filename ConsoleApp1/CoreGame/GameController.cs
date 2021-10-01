@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using ConsoleApp1.Generators;
+using ConsoleApp1.Logging;
 
 namespace ConsoleApp1
 {
-    public class GameController
+    public class GameController: IWorldInfoProvider
     {
-        private List<Worm> _worms = new List<Worm>();
-        private List<Food> _food = new List<Food>();
-        private GameField _gameField = new GameField();
-        RandomName randomName = new RandomName(new Random(DateTime.Now.Second));
-        
-        
+        private readonly List<Worm> _worms = new();
+        private readonly List<Food> _food = new();
+        private readonly GameField _gameField = new();
+        private readonly Logger _logger;
+        private int _gameIterationCounter;
+
+        public GameController()
+        {
+            _logger = new(this);
+        }
         public void GameProcess()
         {
-            AddWorm();
-            for (int i = 0; i != GameContract.NumberOfSteps; i++)
+            AddWorm((0, 0));
+            for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
             {
                 AddFood();
                 _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
                 DecideWormsIntents();
                 _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
                 _gameField.PrintField();
+                DecreaseHealths();
+                _logger.LogNewEvent();
             }
-
-            DecreaseHealths();
         }
         
         private void AddFood()
@@ -47,7 +51,7 @@ namespace ConsoleApp1
             foreach (var worm in _worms)
             {
                 worm.DecreaseHealth();
-                if (worm.IsDeath())
+                if (worm.IsDeath)
                 {
                     _worms.Remove(worm);
                 }
@@ -61,8 +65,8 @@ namespace ConsoleApp1
             {
                 Console.WriteLine(worm.CurrentPosition.ToString());
                 Console.WriteLine("Health: " + worm.Health);
-                int wormX = worm.CurrentPosition.Item1;
-                int wormY = worm.CurrentPosition.Item2;
+                var wormX = worm.CurrentPosition.Item1;
+                var wormY = worm.CurrentPosition.Item2;
                 var wormIntent = worm.GetIntent(_gameField);
 
                 if (wormIntent.Item1 == Actions.Move)
@@ -72,7 +76,7 @@ namespace ConsoleApp1
                         case Directions.Top:
                             if (_gameField.CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
                             {
-                                worm.CurrentPosition = (wormX, worm.CurrentPosition.Item2 + 1);
+                                worm.CurrentPosition = (wormX, wormY + 1);
                             } break;
                         case Directions.Bottom:
                             if (_gameField.CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
@@ -99,16 +103,6 @@ namespace ConsoleApp1
             }
         }
 
-        private bool CheckEmptyCeil()
-        {
-            return false;
-        }
-
-        private bool ValidateCoordInBounds()
-        {
-            return false;
-        }
-
         private bool CheckFoodEat((int, int) wormPosition)
         {
             foreach (var food in _food)
@@ -124,10 +118,29 @@ namespace ConsoleApp1
             return false;
         }
         
-        private void AddWorm()
+        private void AddWorm((int, int) startCoord)
         {
-            string name = randomName.Generate(Sex.Male);
-            _worms.Add(new Worm((0, 0), name));
+            _worms.Add(new Worm(startCoord, "name"));
+        }
+
+        public List<Worm> ProvideWorms()
+        {
+            return _worms;
+        }
+
+        public List<Food> ProvideFood()
+        {
+            return _food;
+        }
+
+        public GameField ProvideGameField()
+        {
+            return (GameField)_gameField.Clone();
+        }
+
+        public int ProvideGameIteration()
+        {
+            return _gameIterationCounter;
         }
     }
 }
