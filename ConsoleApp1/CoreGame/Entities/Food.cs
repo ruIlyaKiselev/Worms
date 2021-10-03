@@ -3,8 +3,9 @@
     /*
      * класс для описания пропертей еды
      */
-    public class Food
+    public class Food: IFoodInfoProvider
     {
+        private (int, int) _currentPosition;
         private int _health = 10; // сколько ходов еде осталось жить
         private bool _isDeath = false; // проперти чтобы удобно было проверять не "протухла" ли еда и удалять её
 
@@ -14,7 +15,7 @@
          */
         public Food((int, int) currentPosition)
         {
-            CurrentPosition = currentPosition;
+            _currentPosition = currentPosition;
         }
         
         public int Health { get; }
@@ -34,6 +35,16 @@
             }
 
             return _isDeath;
+        }
+
+        public (int, int) ProvidePosition()
+        {
+            return _currentPosition;
+        }
+
+        public int ProvideHealth()
+        {
+            return _health;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
 
@@ -7,19 +8,21 @@ namespace ConsoleApp1
 {
     public class GameController: IWorldInfoProvider
     {
-        private readonly List<Worm> _worms = new();
-        private readonly List<Food> _food = new();
-        private readonly GameField _gameField = new();
-        private readonly Logger _logger;
+        private List<Worm> _worms = new();
+        private List<Food> _food = new();
+        private GameField _gameField = new();
+        private Logger _logger;
         private int _gameIterationCounter;
 
         public GameController()
         {
-            _logger = new(this);
+            _logger = new Logger(this);
         }
+        
         public void GameProcess()
         {
             AddWorm((0, 0));
+            
             for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
             {
                 AddFood();
@@ -123,14 +126,14 @@ namespace ConsoleApp1
             _worms.Add(new Worm(startCoord, "name"));
         }
 
-        public List<Worm> ProvideWorms()
+        public List<IWormInfoProvider> ProvideWormsInfo()
         {
-            return _worms;
+            return _worms.Cast<IWormInfoProvider>().ToList();
         }
 
-        public List<Food> ProvideFood()
+        public List<IFoodInfoProvider> ProvideFood()
         {
-            return _food;
+            return _food.Cast<IFoodInfoProvider>().ToList();
         }
 
         public GameField ProvideGameField()

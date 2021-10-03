@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using ConsoleApp1.WormsLogic;
 
 namespace ConsoleApp1
 {
-    public class Worm
+    public class Worm: IWormInfoProvider
     {
         private int _health;
         private bool _isDeath;
@@ -47,6 +46,21 @@ namespace ConsoleApp1
             }
 
             return _isDeath;
+        }
+
+        public string ProvideName()
+        {
+            return _name;
+        }
+
+        public (int, int) ProvidePosition()
+        {
+            return _currentPosition;
+        }
+
+        public int ProvideHealth()
+        {
+            return _health;
         }
     }
 }
