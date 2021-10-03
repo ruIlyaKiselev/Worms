@@ -4,7 +4,7 @@ namespace ConsoleApp1
 {
     public interface IWorldInfoProvider
     {
-        List<IWormInfoProvider> ProvideWormsInfo();
+        List<IWormInfoProvider> ProvideWorms();
         List<IFoodInfoProvider> ProvideFood();
         GameField ProvideGameField();
         int ProvideGameIteration();

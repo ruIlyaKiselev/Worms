@@ -6,17 +6,14 @@ namespace ConsoleApp1.WormsLogic
     {
         public void Decide(Worm worm, GameField gameField)
         {
-            var closeCoord = LiAlgorithm(worm.CurrentPosition, gameField);
-            
+            var (coordX, coordY) = LiAlgorithm(worm.CurrentPosition, gameField);
+
             if (worm.Health <= 50)
             {
                 worm.ActionsIntent = Actions.Move;
-                var diffX = closeCoord.Item1 - worm.CurrentPosition.Item1;
-                var diffY = closeCoord.Item2 - worm.CurrentPosition.Item2;
-                
-                Console.WriteLine("diffX = " + diffX);
-                Console.WriteLine("diffY = " + diffY);
-                
+                var diffX = coordX - worm.CurrentPosition.Item1;
+                var diffY = coordY - worm.CurrentPosition.Item2;
+
                 if (diffX != 0)
                 {
                     if (diffX > 0)
@@ -68,7 +65,7 @@ namespace ConsoleApp1.WormsLogic
             
             for (int k = 0; k != biggestCoord - 1; k++)
             {
-                calculateDistanceFromTo(
+                CalculateDistanceFromTo(
                     distanceField, 
                     (1, 1), 
                     (GameContract.Width - 1, GameContract.Height - 1)
@@ -86,16 +83,11 @@ namespace ConsoleApp1.WormsLogic
                     minRangeToFood = distanceField[currentFoodPosition.Item1, currentFoodPosition.Item2];
                 }
             }
-
-            var translatedFoodCoord = FieldConverter.FromZeroBased(minCoord);
-            Console.WriteLine("Worm position:" + startCoord.Item1 + "," + startCoord.Item2);
-            Console.WriteLine("MinFoodPosition:" + translatedFoodCoord.Item1 + "," + translatedFoodCoord.Item2);
-            Console.WriteLine("Min distance:" + minRangeToFood);
-
+            
             return FieldConverter.FromZeroBased(minCoord);
         }
 
-        private void calculateDistanceFromTo(int[,] distanceField, (int, int) startCoord, (int, int) finishCoord)
+        private void CalculateDistanceFromTo(int[,] distanceField, (int, int) startCoord, (int, int) finishCoord)
         {
             for (int i = startCoord.Item1; i != finishCoord.Item1; i++)
             {

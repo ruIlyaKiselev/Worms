@@ -7,9 +7,6 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            RandomName randomName = new RandomName(new Random(DateTime.Now.Second));
-            string name = randomName.Generate(Sex.Male);
-            Console.WriteLine(name);
             GameController gameController = new GameController();
             gameController.GameProcess();
         }

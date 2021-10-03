@@ -8,8 +8,8 @@ namespace ConsoleApp1
     public class GameField: ICheckCeil, ICloneable
     {
         private FieldObjects[,] _field = new FieldObjects[GameContract.Width, GameContract.Height];
-        private List<Food> _food = new List<Food>();
-        private List<Worm> _worms = new List<Worm>();
+        private List<Food> _food = new();
+        private List<Worm> _worms = new();
         
         public void UpdateField(ReadOnlyCollection<Worm> worms, ReadOnlyCollection<Food> foods)
         {
@@ -23,24 +23,23 @@ namespace ConsoleApp1
             
             foreach (var food in foods)
             {
-                (int, int ) translatedCoords = FieldConverter.ToZeroBased(food.CurrentPosition);
-                _field[translatedCoords.Item1, translatedCoords.Item2] = FieldObjects.Food;
+                var (coordX, coordY) = FieldConverter.ToZeroBased(food.CurrentPosition);
+                _field[coordX, coordY] = FieldObjects.Food;
                 _food.Add(food);
             }
             
             foreach (var worm in worms)
             {
-                (int, int ) translatedCoords = FieldConverter.ToZeroBased(worm.CurrentPosition);
-                _field[translatedCoords.Item1, translatedCoords.Item2] = FieldObjects.Worm;
+                var (coordX, coordY) = FieldConverter.ToZeroBased(worm.CurrentPosition);
+                _field[coordX, coordY] = FieldObjects.Worm;
                 _worms.Add(worm);
             }
         }
 
         public FieldObjects CheckCeil((int, int) coord)
         {
-            (int, int) translatedCoords = FieldConverter.ToZeroBased(coord);
-            // Console.WriteLine(coord + "(" + FoodCoordGenerator.ValidateCoordInBounds(coord) + ")" + " ->  " + translatedCoords);
-            return _field[translatedCoords.Item1, translatedCoords.Item2];
+            var (coordX, coordY) = FieldConverter.ToZeroBased(coord);
+            return _field[coordX, coordY];
         }
 
         public void PrintField()

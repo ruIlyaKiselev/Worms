@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
@@ -22,59 +21,51 @@ namespace ConsoleApp1
         public void GameProcess()
         {
             AddWorm((0, 0));
+            AddFood();
+            AddFood();
+            AddFood();
+            AddFood();
+            AddFood();
             
             for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
             {
-                AddFood();
                 _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
                 DecideWormsIntents();
-                _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
-                _gameField.PrintField();
                 DecreaseHealths();
+                AddFood();
                 _logger.LogNewEvent();
             }
         }
         
         private void AddFood()
         {
-            _food.Add(new Food(FoodCoordGenerator.GenerateFoodCoord(_gameField)));
+            _food.Add(new Food(FoodCoordGenerator.GenerateFoodCoord(this)));
         }
 
         private void DecreaseHealths()
         {
-            foreach (var food in _food)
+            foreach (var food in _food.Where(food => food.DecreaseHealth()))
             {
-                food.DecreaseHealth();
-                if (food.IsDeath)
-                {
-                    _food.Remove(food);
-                }
+                _food.Remove(food);
             }
 
-            foreach (var worm in _worms)
+            foreach (var worm in _worms.Where(worm => worm.DecreaseHealth()))
             {
-                worm.DecreaseHealth();
-                if (worm.IsDeath)
-                {
-                    _worms.Remove(worm);
-                }
+                _worms.Remove(worm);
             }
         }
 
         private void DecideWormsIntents()
         {
-            var gameField = _gameField.GetFieldAsArray();
             foreach (var worm in _worms)
             {
-                Console.WriteLine(worm.CurrentPosition.ToString());
-                Console.WriteLine("Health: " + worm.Health);
                 var wormX = worm.CurrentPosition.Item1;
                 var wormY = worm.CurrentPosition.Item2;
-                var wormIntent = worm.GetIntent(_gameField);
+                var (wormAction, wormDirection) = worm.GetIntent(this);
 
-                if (wormIntent.Item1 == Actions.Move)
+                if (wormAction == Actions.Move)
                 {
-                    switch (wormIntent.Item2)
+                    switch (wormDirection)
                     {
                         case Directions.Top:
                             if (_gameField.CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
@@ -126,7 +117,7 @@ namespace ConsoleApp1
             _worms.Add(new Worm(startCoord, "name"));
         }
 
-        public List<IWormInfoProvider> ProvideWormsInfo()
+        public List<IWormInfoProvider> ProvideWorms()
         {
             return _worms.Cast<IWormInfoProvider>().ToList();
         }

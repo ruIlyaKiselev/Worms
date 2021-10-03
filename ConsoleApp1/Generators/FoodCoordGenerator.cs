@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleApp1.Generators
 {
     public static class FoodCoordGenerator
     {
-        private static readonly Random _random = new Random(DateTime.Now.Second);
+        private static readonly Random _random = new(DateTime.Now.Second);
         
         /*
          * функция генерации координат, которые гарантированно не выходят за пределы массива-игрового поля
@@ -15,6 +17,21 @@ namespace ConsoleApp1.Generators
             var coordForResult = NextCoordinate();
             
             while (gameField.CheckCeil((coordForResult.Item1, coordForResult.Item2)) == FieldObjects.Food)
+            {
+                coordForResult = NextCoordinate();
+            }
+            
+            return coordForResult;
+        }
+        
+        public static (int, int) GenerateFoodCoord(IWorldInfoProvider infoProvider)
+        {
+            var coordForResult = NextCoordinate();
+
+            var foodList = infoProvider.ProvideFood();
+            var foodCoords = foodList.Select(food => food.ProvidePosition()).ToList();
+
+            while (foodCoords.Contains(coordForResult))
             {
                 coordForResult = NextCoordinate();
             }

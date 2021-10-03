@@ -28,10 +28,29 @@ namespace ConsoleApp1
 
         public string Name { get; set; }
 
-        public (Actions, Directions) GetIntent(GameField gameField)
+        public int GetLengthToFood(IWorldInfoProvider infoProvider)
         {
-            _wormLogic.Decide(this, gameField);
-            Console.WriteLine(_actionsIntent + " " + _directionsIntent);
+            int minLength = 10000;
+            foreach (var food in infoProvider.ProvideFood())
+            {
+                int deltaX = Math.Abs(_currentPosition.Item1 - food.ProvidePosition().Item1);
+                int deltaY = Math.Abs(_currentPosition.Item2 - food.ProvidePosition().Item2);
+                int totalDelta = deltaX + deltaY;
+                
+                if (totalDelta < minLength)
+                {
+                    minLength = totalDelta;
+                }
+
+                return minLength;
+            }
+
+            return 0;
+        }
+        
+        public (Actions, Directions) GetIntent(IWorldInfoProvider infoProvider)
+        {
+            _wormLogic.Decide(this, infoProvider.ProvideGameField());
             return (_actionsIntent, _directionsIntent);
         }
 

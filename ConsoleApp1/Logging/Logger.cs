@@ -23,7 +23,8 @@ namespace ConsoleApp1.Logging
                 .Append(GenerateFoodLog())
                 .Append('\n');
             
-            File.AppendAllText(fileName, stringBuilder.ToString());    
+            File.AppendAllText(fileName, stringBuilder.ToString());
+            Console.WriteLine(stringBuilder.ToString());
         }
 
         /*
@@ -61,7 +62,7 @@ namespace ConsoleApp1.Logging
 
             stringBuilder.Append("Worms: [");
 
-            foreach (var worm in infoProvider.ProvideWormsInfo())
+            foreach (var worm in infoProvider.ProvideWorms())
             {
                 stringBuilder
                     .Append(worm.ProvideName())

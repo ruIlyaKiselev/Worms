@@ -6,8 +6,8 @@
     public class Food: IFoodInfoProvider
     {
         private (int, int) _currentPosition;
-        private int _health = 10; // сколько ходов еде осталось жить
-        private bool _isDeath = false; // проперти чтобы удобно было проверять не "протухла" ли еда и удалять её
+        private int _health; // сколько ходов еде осталось жить
+        private bool _isDeath; // проперти чтобы удобно было проверять не "протухла" ли еда и удалять её
 
         /*
          * конструктор
@@ -15,6 +15,8 @@
          */
         public Food((int, int) currentPosition)
         {
+            _health = 10;
+            _isDeath = false;
             _currentPosition = currentPosition;
         }
         
