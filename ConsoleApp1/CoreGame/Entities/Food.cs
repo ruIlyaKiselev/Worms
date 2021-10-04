@@ -5,24 +5,22 @@
      */
     public class Food: IFoodInfoProvider
     {
-        private (int, int) _currentPosition;
-        private int _health; // сколько ходов еде осталось жить
-        private bool _isDeath; // проперти чтобы удобно было проверять не "протухла" ли еда и удалять её
-
         /*
          * конструктор
          * для создания еды необходимо передать ей её координаты, которые сгенерированы в генераторе
          */
         public Food((int, int) currentPosition)
         {
-            _health = 10;
-            _isDeath = false;
-            _currentPosition = currentPosition;
+            Health = 10;
+            IsDeath = false;
+            CurrentPosition = currentPosition;
         }
-        
-        public int Health { get; }
-        public (int, int) CurrentPosition { get; }
-        public bool IsDeath { get; }
+
+        public int Health { get; private set; }
+
+        public (int, int) CurrentPosition { get; set; }
+
+        public bool IsDeath { get; private set; }
 
         /*
          * метод для уменьшения числа ходов, через которые еда "протухнет"; когда ходы закончатся, еда помечается через
@@ -30,23 +28,23 @@
          */
         public bool DecreaseHealth()
         {
-            _health -= 1;
-            if (_health <= 0)
+            Health -= 1;
+            if (Health <= 0)
             {
-                _isDeath = true;
+                IsDeath = true;
             }
 
-            return _isDeath;
+            return IsDeath;
         }
 
         public (int, int) ProvidePosition()
         {
-            return _currentPosition;
+            return CurrentPosition;
         }
 
         public int ProvideHealth()
         {
-            return _health;
+            return Health;
         }
     }
 }

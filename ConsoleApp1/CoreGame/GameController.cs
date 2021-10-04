@@ -21,12 +21,7 @@ namespace ConsoleApp1
         public void GameProcess()
         {
             AddWorm((0, 0));
-            AddFood();
-            AddFood();
-            AddFood();
-            AddFood();
-            AddFood();
-            
+
             for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
             {
                 _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
@@ -44,15 +39,18 @@ namespace ConsoleApp1
 
         private void DecreaseHealths()
         {
-            foreach (var food in _food.Where(food => food.DecreaseHealth()))
+            foreach (var worm in _worms)
             {
-                _food.Remove(food);
+                worm.DecreaseHealth();
             }
-
-            foreach (var worm in _worms.Where(worm => worm.DecreaseHealth()))
+            
+            foreach (var food in _food)
             {
-                _worms.Remove(worm);
+                food.DecreaseHealth();
             }
+            
+            _worms.RemoveAll(worm => worm.IsDeath);
+            _food.RemoveAll(food => food.IsDeath);
         }
 
         private void DecideWormsIntents()

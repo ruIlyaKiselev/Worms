@@ -5,27 +5,25 @@ namespace ConsoleApp1
 {
     public class Worm: IWormInfoProvider
     {
-        private int _health;
         private bool _isDeath;
-        private Directions _directionsIntent = Directions.None;
-        private Actions _actionsIntent = Actions.None;
         private IWormLogic _wormLogic;
         private (int, int) _currentPosition;
         private string _name;
 
         public Worm((int, int) currentPosition, string name)
         {
-            _health = 10;
-            _currentPosition = currentPosition;
-            _name = name;
+            Health = 10;
+            ActionsIntent = Actions.None;
+            DirectionIntent = Directions.None;
+            CurrentPosition = currentPosition;
+            Name = name;
             _wormLogic = new FoodFindLogic();
         }
-        
+
         public int Health { get; set; }
-        public Actions ActionsIntent { get; set; }
+        public Actions ActionsIntent { get; set; } 
         public Directions DirectionIntent { get; set; }
         public (int, int) CurrentPosition { get; set; }
-
         public string Name { get; set; }
 
         public int GetLengthToFood(IWorldInfoProvider infoProvider)
@@ -51,15 +49,15 @@ namespace ConsoleApp1
         public (Actions, Directions) GetIntent(IWorldInfoProvider infoProvider)
         {
             _wormLogic.Decide(this, infoProvider.ProvideGameField());
-            return (_actionsIntent, _directionsIntent);
+            return (ActionsIntent, DirectionIntent);
         }
 
         public bool IsDeath { get; set; }
         
         public bool DecreaseHealth()
         {
-            _health -= 1;
-            if (_health <= 0)
+            Health -= 1;
+            if (Health <= 0)
             {
                 _isDeath = true;
             }
@@ -79,7 +77,7 @@ namespace ConsoleApp1
 
         public int ProvideHealth()
         {
-            return _health;
+            return Health;
         }
     }
 }
