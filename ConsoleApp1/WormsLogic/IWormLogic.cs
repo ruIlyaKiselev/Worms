@@ -2,6 +2,6 @@
 {
     public interface IWormLogic
     {
-        public void Decide(Worm worm, GameField gameField);
+        public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider);
     }
 }

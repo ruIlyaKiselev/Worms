@@ -31,14 +31,13 @@ namespace ConsoleApp1.WormsLogic
             }
         }
         
-        public void Decide(Worm worm, GameField gameField)
+        public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider)
         {
             var action = Actions.Move;
             var direction = _directionsList[_stepsCounter];
             _stepsCounter = (_stepsCounter + 1) % (_directionsList.Count - 1);
-            
-            worm.ActionsIntent = action;
-            worm.DirectionIntent = direction;
+
+            return (action, direction);
         } 
     }
 }

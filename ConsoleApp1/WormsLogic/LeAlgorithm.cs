@@ -4,25 +4,27 @@ namespace ConsoleApp1.WormsLogic
 {
     public class FoodFindLogic: IWormLogic
     {
-        public void Decide(Worm worm, GameField gameField)
+        public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider)
         {
-            var (coordX, coordY) = LiAlgorithm(worm.CurrentPosition, gameField);
+            var action = Actions.None;
+            var direction = Directions.None;
+            var (coordX, coordY) = LiAlgorithm(worm.ProvidePosition(), infoProvider.ProvideGameField());
 
-            if (worm.Health <= 50)
+            if (worm.ProvideHealth() <= 50)
             {
-                worm.ActionsIntent = Actions.Move;
-                var diffX = coordX - worm.CurrentPosition.Item1;
-                var diffY = coordY - worm.CurrentPosition.Item2;
+                action = Actions.Move;
+                var diffX = coordX - worm.ProvidePosition().Item1;
+                var diffY = coordY - worm.ProvidePosition().Item2;
 
                 if (diffX != 0)
                 {
                     if (diffX > 0)
                     {
-                        worm.DirectionIntent = Directions.Right;
+                        direction = Directions.Right;
                     }
                     if (diffX < 0)
                     {
-                        worm.DirectionIntent = Directions.Left;
+                        direction = Directions.Left;
                     }
                 }
                 
@@ -30,19 +32,21 @@ namespace ConsoleApp1.WormsLogic
                 {
                     if (diffY > 0)
                     {
-                        worm.DirectionIntent = Directions.Top;
+                        direction = Directions.Top;
                     }
                     if (diffY < 0)
                     {
-                        worm.DirectionIntent = Directions.Bottom;
+                        direction = Directions.Bottom;
                     }
                 }
             }
             else
             {
-                worm.ActionsIntent = Actions.Budding;
-                worm.DirectionIntent = Directions.Top;
+                action = Actions.Budding;
+                direction = Directions.Top;
             }
+
+            return (action, direction);
         }
         
         private (int, int) LiAlgorithm((int, int) startCoord, GameField gameField)
