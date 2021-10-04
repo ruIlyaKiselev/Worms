@@ -24,12 +24,121 @@ namespace ConsoleApp1
 
             for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
             {
-                _gameField.UpdateField(_worms.AsReadOnly(), _food.AsReadOnly());
                 DecideWormsIntents();
                 DecreaseHealths();
                 AddFood();
                 _logger.LogNewEvent();
             }
+        }
+
+        private void DecideWormsIntents()
+        {
+            foreach (var worm in new List<Worm>(_worms))
+            {
+                var wormX = worm.CurrentPosition.Item1;
+                var wormY = worm.CurrentPosition.Item2;
+                var (wormAction, wormDirection) = worm.GetIntent(this);
+
+                if (wormAction == Actions.Move)
+                {
+                    switch (wormDirection)
+                    {
+                        case Directions.Top:
+                            if (CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX, wormY + 1);
+                            } break;
+                        case Directions.Bottom:
+                            if (CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX, wormY - 1);
+                            } break;
+                        case Directions.Right:
+                            if (CheckCeil((wormX + 1, wormY)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX + 1, wormY);
+                            } break;
+                        case Directions.Left:
+                            if (CheckCeil((wormX - 1, wormY)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX - 1, wormY);
+                            } break;
+                    }
+                }
+                else if (wormAction == Actions.Budding)
+                {
+                    switch (wormDirection)
+                    {
+                        case Directions.Top:
+                            if (CheckCeil((wormX, wormY + 1)) == FieldObjects.Empty)
+                            {
+                                AddWorm((wormX, wormY + 1));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Bottom:
+                            if (CheckCeil((wormX, wormY - 1)) == FieldObjects.Empty)
+                            {
+                                AddWorm((wormX, wormY - 1));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Right:
+                            if (CheckCeil((wormX + 1, wormY)) == FieldObjects.Empty)
+                            {
+                                AddWorm((wormX + 1, wormY));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Left:
+                            if (CheckCeil((wormX - 1, wormY)) == FieldObjects.Empty)
+                            {
+                                AddWorm((wormX - 1, wormY));
+                                worm.Health -= 10;
+                            } break;
+                    }
+                }
+
+                if (CheckFoodEat((wormX, wormY)))
+                {
+                    worm.Health += 10;
+                }
+            }
+        }
+
+        FieldObjects CheckCeil((int, int) ceilCoords)
+        {
+            var foodCoordList = _food.Select(food => food.ProvidePosition()).ToList();
+            var wormsCoordList = _worms.Select(worms => worms.ProvidePosition()).ToList();
+
+            if (wormsCoordList.Contains(ceilCoords))
+            {
+                return FieldObjects.Worm;
+            }
+            
+            if (foodCoordList.Contains(ceilCoords))
+            {
+                return FieldObjects.Food;
+            }
+
+            return FieldObjects.Empty;
+        }
+        
+        private bool CheckFoodEat((int, int) wormPosition)
+        {
+            foreach (var food in _food)
+            {
+                if (food.CurrentPosition.Item1 == wormPosition.Item1 &&
+                    food.CurrentPosition.Item2 == wormPosition.Item2)
+                {
+                    _food.Remove(food);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        private void AddWorm((int, int) startCoord)
+        {
+            _worms.Add(new Worm(startCoord, "name"));
         }
         
         private void AddFood()
@@ -51,68 +160,6 @@ namespace ConsoleApp1
             
             _worms.RemoveAll(worm => worm.IsDeath);
             _food.RemoveAll(food => food.IsDeath);
-        }
-
-        private void DecideWormsIntents()
-        {
-            foreach (var worm in _worms)
-            {
-                var wormX = worm.CurrentPosition.Item1;
-                var wormY = worm.CurrentPosition.Item2;
-                var (wormAction, wormDirection) = worm.GetIntent(this);
-
-                if (wormAction == Actions.Move)
-                {
-                    switch (wormDirection)
-                    {
-                        case Directions.Top:
-                            if (_gameField.CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
-                            {
-                                worm.CurrentPosition = (wormX, wormY + 1);
-                            } break;
-                        case Directions.Bottom:
-                            if (_gameField.CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
-                            {
-                                worm.CurrentPosition = (wormX, wormY - 1);
-                            } break;
-                        case Directions.Right:
-                            if (_gameField.CheckCeil((wormX + 1, wormY)) != FieldObjects.Worm)
-                            {
-                                worm.CurrentPosition = (wormX + 1, wormY);
-                            } break;
-                        case Directions.Left:
-                            if (_gameField.CheckCeil((wormX - 1, wormY)) != FieldObjects.Worm)
-                            {
-                                worm.CurrentPosition = (wormX - 1, wormY);
-                            } break;
-                    }
-                }
-
-                if (CheckFoodEat((wormX, wormY)))
-                {
-                    worm.Health += 10;
-                }
-            }
-        }
-
-        private bool CheckFoodEat((int, int) wormPosition)
-        {
-            foreach (var food in _food)
-            {
-                if (food.CurrentPosition.Item1 == wormPosition.Item1 &&
-                    food.CurrentPosition.Item2 == wormPosition.Item2)
-                {
-                    _food.Remove(food);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        
-        private void AddWorm((int, int) startCoord)
-        {
-            _worms.Add(new Worm(startCoord, "name"));
         }
 
         public List<IWormInfoProvider> ProvideWorms()

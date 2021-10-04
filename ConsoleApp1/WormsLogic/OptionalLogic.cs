@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleApp1.WormsLogic
 {
@@ -10,9 +12,8 @@ namespace ConsoleApp1.WormsLogic
             var direction = Directions.None;
             
             var wormCoords = worm.ProvidePosition();
-            
 
-            if (worm.ProvideHealth() <= 300)
+            if (worm.ProvideHealth() <= 30)
             {
                 action = Actions.Move;
                 var nearestFoodCoord = GetNearestFoodCoord(wormCoords, infoProvider);
@@ -37,11 +38,39 @@ namespace ConsoleApp1.WormsLogic
                     direction = Directions.Top;
                 }
             }
+            else
+            {
+                action = Actions.Budding;
+                
+                var foodCoordList = infoProvider.ProvideFood().Select(food => food.ProvidePosition()).ToList();
+                var wormsCoordList = infoProvider.ProvideWorms().Select(worms => worms.ProvidePosition()).ToList();
+
+                if (!foodCoordList.Contains((wormCoords.Item1, wormCoords.Item2 + 1)) &&
+                    !wormsCoordList.Contains((wormCoords.Item1, wormCoords.Item2 + 1)))
+                {
+                    direction = Directions.Top;
+                }
+                else if (!foodCoordList.Contains((wormCoords.Item1, wormCoords.Item2 - 1)) &&
+                         !wormsCoordList.Contains((wormCoords.Item1, wormCoords.Item2 - 1)))
+                {
+                    direction = Directions.Bottom;
+                }
+                else if (!foodCoordList.Contains((wormCoords.Item1 + 1, wormCoords.Item2)) &&
+                         !wormsCoordList.Contains((wormCoords.Item1 + 1, wormCoords.Item2)))
+                {
+                    direction = Directions.Right;
+                }
+                else if (!foodCoordList.Contains((wormCoords.Item1 - 1, wormCoords.Item2)) &&
+                         !wormsCoordList.Contains((wormCoords.Item1 - 1, wormCoords.Item2)))
+                {
+                    direction = Directions.Left;
+                }
+            }
             
             return (action, direction);
         }
         
-        private (int, int) GetNearestFoodCoord((int, int) wormCoords, IWorldInfoProvider infoProvider)
+        private static (int, int) GetNearestFoodCoord((int, int) wormCoords, IWorldInfoProvider infoProvider)
         {
             int minLength = 10000;
             (int, int) nearestFoodCoord = (0, 0);
