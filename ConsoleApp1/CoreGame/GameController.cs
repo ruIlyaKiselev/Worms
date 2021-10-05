@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
@@ -12,10 +13,12 @@ namespace ConsoleApp1
         private GameField _gameField = new();
         private Logger _logger;
         private int _gameIterationCounter;
+        private RandomNameGenerator _randomNumberGenerator;
 
         public GameController()
         {
             _logger = new Logger(this);
+            _randomNumberGenerator = new RandomNameGenerator(new Random());
         }
         
         public void GameProcess()
@@ -138,7 +141,7 @@ namespace ConsoleApp1
         
         private void AddWorm((int, int) startCoord)
         {
-            _worms.Add(new Worm(startCoord, "name"));
+            _worms.Add(new Worm(startCoord, _randomNumberGenerator.Generate()));
         }
         
         private void AddFood()

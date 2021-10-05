@@ -9,8 +9,8 @@ namespace ConsoleApp1.Generators
     /// <summary>
     /// RandomName class, used to generate a random name.
     /// </summary>
-    public class RandomName
-    {  
+    public class RandomNameGenerator
+    {
         /// <summary>
         /// Class for holding the lists of names from names.json
         /// </summary>
@@ -37,7 +37,7 @@ namespace ConsoleApp1.Generators
         /// Initialises a new instance of the RandomName class.
         /// </summary>
         /// <param name="rand">A Random that is used to pick names</param>
-        public RandomName(Random rand)
+        public RandomNameGenerator(Random rand)
         {
             this.rand = rand;
             NameList l = new NameList();
@@ -62,24 +62,13 @@ namespace ConsoleApp1.Generators
         /// <param name="middle">How many middle names do generate</param>
         /// <param name="isInital">Should the middle names be initials or not?</param>
         /// <returns>The random name as a string</returns>
-        public string Generate(Sex sex, int middle = 0, bool isInital = false)
+        public string Generate()
         {
+            var sex = rand.Next() % 2 == 0 ? Sex.Male : Sex.Female;
             string first = sex == Sex.Male ? Male[rand.Next(Male.Count)] : Female[rand.Next(Female.Count)]; // determines if we should select a name from male or female, and randomly picks
             string last = Last[rand.Next(Last.Count)]; // gets the last name
 
             List<string> middles = new List<string>();
-
-            for (int i = 0; i < middle; i++)
-            {
-                if (isInital)
-                {
-                    middles.Add("ABCDEFGHIJKLMNOPQRSTUVWXYZ"[rand.Next(0, 25)].ToString() + "."); // randomly selects an uppercase letter to use as the inital and appends a dot
-                }
-                else
-                {
-                    middles.Add(sex == Sex.Male ? Male[rand.Next(Male.Count)] : Female[rand.Next(Female.Count)]); // randomly selects a name that fits with the sex of the person
-                }
-            }
 
             StringBuilder b = new StringBuilder();
             b.Append(first + " "); // put a space after our names;
@@ -108,23 +97,23 @@ namespace ConsoleApp1.Generators
             {
                 if (sex != null && initials != null)
                 {
-                    names.Add(Generate((Sex)sex, rand.Next(0, maxMiddleNames + 1), (bool)initials));
+                    names.Add(Generate());
                 }
                 else if (sex != null)
                 {
                     bool init = rand.Next(0, 2) != 0;
-                    names.Add(Generate((Sex)sex, rand.Next(0, maxMiddleNames + 1), init));
+                    names.Add(Generate());
                 }
                 else if (initials != null)
                 {
                     Sex s = (Sex)rand.Next(0, 2);
-                    names.Add(Generate(s, rand.Next(0, maxMiddleNames + 1), (bool)initials));
+                    names.Add(Generate());
                 }
                 else
                 {
                     Sex s = (Sex)rand.Next(0, 2);
                     bool init = rand.Next(0, 2) != 0;
-                    names.Add(Generate(s, rand.Next(0, maxMiddleNames + 1), init));
+                    names.Add(Generate());
                 }
             }
 
