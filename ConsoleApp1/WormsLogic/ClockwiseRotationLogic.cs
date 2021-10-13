@@ -10,25 +10,17 @@ namespace ConsoleApp1.WormsLogic
         public ClockwiseRotationLogic()
         {
             _stepsCounter = 0;
-            
-            if (GameContract.StartX <= -1 && GameContract.FinishX >= 1 && GameContract.StartY <= -1 &&
-                GameContract.FinishY >= 1)
-            {
-                _directionsList.Add(Directions.Top);
-                _directionsList.Add(Directions.Right);
-                _directionsList.Add(Directions.Bottom);
-                _directionsList.Add(Directions.Bottom);
-                _directionsList.Add(Directions.Left);
-                _directionsList.Add(Directions.Left);
-                _directionsList.Add(Directions.Top);
-                _directionsList.Add(Directions.Top);
-                _directionsList.Add(Directions.Right);
-                _directionsList.Add(Directions.Bottom);
-            }
-            else
-            {
-                _directionsList.Add(Directions.None);
-            }
+
+            _directionsList.Add(Directions.Top);
+            _directionsList.Add(Directions.Right);
+            _directionsList.Add(Directions.Bottom);
+            _directionsList.Add(Directions.Bottom);
+            _directionsList.Add(Directions.Left);
+            _directionsList.Add(Directions.Left);
+            _directionsList.Add(Directions.Top);
+            _directionsList.Add(Directions.Top);
+            _directionsList.Add(Directions.Right);
+            _directionsList.Add(Directions.Bottom);
         }
         
         public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider)

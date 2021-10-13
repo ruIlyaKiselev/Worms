@@ -51,11 +51,11 @@ namespace ConsoleApp1.WormsLogic
         
         private (int, int) LiAlgorithm((int, int) startCoord, GameField gameField)
         {
-            int[,] distanceField = new int[GameContract.Width, GameContract.Height];
+            int[,] distanceField = new int[GameFieldContract.Width, GameFieldContract.Height];
             
-            for (int i = 0; i != GameContract.Width; i++)
+            for (int i = 0; i != GameFieldContract.Width; i++)
             {
-                for (int j = 0; j != GameContract.Height; j++)
+                for (int j = 0; j != GameFieldContract.Height; j++)
                 {
                     distanceField[i, j] = -1;
                 }
@@ -65,14 +65,14 @@ namespace ConsoleApp1.WormsLogic
             distanceField[translatedCoords.Item1, translatedCoords.Item2] = 0;
 
 
-            int biggestCoord = GameContract.Height > GameContract.Width ? GameContract.Height : GameContract.Width;
+            int biggestCoord = GameFieldContract.Height > GameFieldContract.Width ? GameFieldContract.Height : GameFieldContract.Width;
             
             for (int k = 0; k != biggestCoord - 1; k++)
             {
                 CalculateDistanceFromTo(
                     distanceField, 
                     (1, 1), 
-                    (GameContract.Width - 1, GameContract.Height - 1)
+                    (GameFieldContract.Width - 1, GameFieldContract.Height - 1)
                 );
             }
 

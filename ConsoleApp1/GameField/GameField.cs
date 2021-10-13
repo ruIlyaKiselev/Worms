@@ -7,15 +7,15 @@ namespace ConsoleApp1
 {
     public class GameField: ICheckCeil, ICloneable
     {
-        private FieldObjects[,] _field = new FieldObjects[GameContract.Width, GameContract.Height];
+        private FieldObjects[,] _field = new FieldObjects[GameFieldContract.Width, GameFieldContract.Height];
         private List<Food> _food = new();
         private List<Worm> _worms = new();
         
         public void UpdateField(ReadOnlyCollection<Worm> worms, ReadOnlyCollection<Food> foods)
         {
-            for (int i = 0; i != GameContract.Width; i++)
+            for (int i = 0; i != GameFieldContract.Width; i++)
             {
-                for (int j = 0; j != GameContract.Width; j++)
+                for (int j = 0; j != GameFieldContract.Width; j++)
                 {
                     _field[i, j] = FieldObjects.Empty;
                 }
@@ -46,9 +46,9 @@ namespace ConsoleApp1
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            for (int i = 0; i != GameContract.Width; i++)
+            for (int i = 0; i != GameFieldContract.Width; i++)
             {
-                for (int j = 0; j != GameContract.Height; j++)
+                for (int j = 0; j != GameFieldContract.Height; j++)
                 {
                     stringBuilder.Append(FieldConverter.FieldObjectConverter(_field[j, i]) + " ");
                 }

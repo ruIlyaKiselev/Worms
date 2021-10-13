@@ -12,7 +12,7 @@
          */
         public static (int, int) ToZeroBased((int, int) coord)
         {
-            return (coord.Item1 - GameContract.StartX, -coord.Item2 + GameContract.FinishY);
+            return (coord.Item1 - GameFieldContract.StartX, -coord.Item2 + GameFieldContract.FinishY);
         }
 
         /*
@@ -20,7 +20,7 @@
          */
         public static (int, int) FromZeroBased((int, int) coord)
         {
-            return (coord.Item1 + GameContract.StartX, -coord.Item2 + GameContract.FinishY);
+            return (coord.Item1 + GameFieldContract.StartX, -coord.Item2 + GameFieldContract.FinishY);
         }
         
         /*
