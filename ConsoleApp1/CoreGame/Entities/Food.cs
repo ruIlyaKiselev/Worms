@@ -1,7 +1,7 @@
 ﻿namespace ConsoleApp1
 {
     /*
-     * класс для описания пропертей еды
+     * класс для описания еды
      */
     public class Food: IFoodInfoProvider
     {

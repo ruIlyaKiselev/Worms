@@ -9,7 +9,7 @@ namespace ConsoleApp1.Generators
     /// <summary>
     /// RandomName class, used to generate a random name.
     /// </summary>
-    public class RandomNameGenerator
+    public class RandomNameGenerator: INameGenerator
     {
         /// <summary>
         /// Class for holding the lists of names from names.json
@@ -44,7 +44,8 @@ namespace ConsoleApp1.Generators
 
             JsonSerializer serializer = new JsonSerializer();
 
-            using (StreamReader reader = new StreamReader("C:/Users/ruily_g40rtk5/RiderProjects/ConsoleApp1/ConsoleApp1/resources/names.json"))
+            //"C:/Users/ruily_g40rtk5/RiderProjects/ConsoleApp1/ConsoleApp1/resources/names.json"
+            using (StreamReader reader = new StreamReader("names.json"))
             using (JsonReader jreader = new JsonTextReader(reader))
             {
                 l = serializer.Deserialize<NameList>(jreader);

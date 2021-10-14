@@ -1,24 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
+using ConsoleApp1.WormsLogic;
+using Microsoft.Extensions.Hosting;
 
 namespace ConsoleApp1
 {
-    public class GameController: IWorldInfoProvider
+    public class GameControllerService: IHostedService, IWorldInfoProvider
     {
         private List<Worm> _worms = new();
         private List<Food> _food = new();
-        private GameField _gameField = new();
-        private Logger _logger;
         private int _gameIterationCounter;
-        private RandomNameGenerator _randomNumberGenerator;
 
-        public GameController()
+        private IFoodGenerator _foodGenerator;
+        private INameGenerator _nameGenerator;
+        private IWormLogic _wormLogic;
+        private ILogger _logger;
+
+        private GameField _gameField = new();
+        
+        public GameControllerService(
+            IFoodGenerator foodGenerator,
+            INameGenerator nameGenerator,
+            IWormLogic wormLogic,
+            ILogger logger,
+            IHostApplicationLifetime applicationLifetime
+        ) 
         {
-            _logger = new Logger(this);
-            _randomNumberGenerator = new RandomNameGenerator(new Random());
+            _foodGenerator = foodGenerator;
+            _nameGenerator = nameGenerator;
+            _wormLogic = wormLogic;
+            _logger = logger;
+        }
+        
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            GameProcess();
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            Console.WriteLine("Finish");
+            return Task.CompletedTask;
         }
         
         public void GameProcess()
@@ -33,7 +61,7 @@ namespace ConsoleApp1
                 _logger.LogNewEvent(this);
             }
         }
-
+        
         private void DecideWormsIntents()
         {
             foreach (var worm in new List<Worm>(_worms))
@@ -141,7 +169,7 @@ namespace ConsoleApp1
         
         private void AddWorm((int, int) startCoord)
         {
-            _worms.Add(new Worm(startCoord, _randomNumberGenerator.Generate()));
+            _worms.Add(new Worm(startCoord, _nameGenerator.Generate()));
         }
         
         private void AddFood()

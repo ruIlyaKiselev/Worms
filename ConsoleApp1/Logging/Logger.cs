@@ -4,27 +4,42 @@ using System.Text;
 
 namespace ConsoleApp1.Logging
 {
-    public class Logger
+    public class Logger: ILogger
     {
         private string fileName;
-        private IWorldInfoProvider infoProvider;
-        public Logger(IWorldInfoProvider infoProvider)
+        private IWorldInfoProvider storedInfoProvider;
+        public Logger(IWorldInfoProvider storedInfoProvider)
         {
-            this.infoProvider = infoProvider;
+            this.storedInfoProvider = storedInfoProvider;
             fileName = GenerateLogFileName();
         }
         
-        public void LogNewEvent()
+        public Logger()
+        {
+            fileName = GenerateLogFileName();
+        }
+
+        public void LogNewEvent(IWorldInfoProvider infoProvider)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder
-                .Append(GenerateWormsLog())
+                .Append(GenerateWormsLog(infoProvider))
                 .Append(", ")
-                .Append(GenerateFoodLog())
+                .Append(GenerateFoodLog(infoProvider))
                 .Append('\n');
             
             File.AppendAllText(fileName, stringBuilder.ToString());
             Console.WriteLine(stringBuilder.ToString());
+        }
+
+        public void LogNewEvent()
+        {
+            if (storedInfoProvider == null)
+            {
+                throw new ArgumentException("Info provider should be initialized in constructor");
+            }
+
+            LogNewEvent(storedInfoProvider);
         }
 
         /*
@@ -32,7 +47,7 @@ namespace ConsoleApp1.Logging
          * Создается на основе текущего времени и даты,
          * что гарантирует уникальность имени в рамках одного компьютера
          */
-        private string GenerateLogFileName()
+        private static string GenerateLogFileName()
         {
             var currentDate = DateTime.Now;
 
@@ -50,13 +65,14 @@ namespace ConsoleApp1.Logging
                 .Append(currentDate.Month)
                 .Append('_')
                 .Append(currentDate.Year)
+                .Append(".txt")
                 .ToString();
         }
 
         /*
          * метод генерирует для лог-файла для текущей итерации строку с информацией о червячках в виде имя-hp(coords)
          */
-        private string GenerateWormsLog()
+        private static string GenerateWormsLog(IWorldInfoProvider infoProvider)
         {
             var stringBuilder = new StringBuilder();
 
@@ -79,7 +95,7 @@ namespace ConsoleApp1.Logging
         /*
          * метод генерирует для лог-файла для текущей итерации строку с информацией о еде в виде hp(coords)
          */
-        private string GenerateFoodLog()
+        private static string GenerateFoodLog(IWorldInfoProvider infoProvider)
         {
             var stringBuilder = new StringBuilder();
 
