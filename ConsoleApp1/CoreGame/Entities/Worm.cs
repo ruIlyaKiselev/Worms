@@ -7,14 +7,18 @@ namespace ConsoleApp1
     {
         private IWormLogic _wormLogic;
 
-        public Worm((int, int) currentPosition, string name)
+        public Worm(
+            (int, int) currentPosition, 
+            string name,
+            IWormLogic wormLogic)
+            
         {
             Health = 10;
             ActionsIntent = Actions.None;
             DirectionIntent = Directions.None;
             CurrentPosition = currentPosition;
             Name = name;
-            _wormLogic = new OptionalLogic();
+            _wormLogic = wormLogic;
         }
 
         public int Health { get; set; }

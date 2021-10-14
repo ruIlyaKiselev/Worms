@@ -169,12 +169,12 @@ namespace ConsoleApp1
         
         private void AddWorm((int, int) startCoord)
         {
-            _worms.Add(new Worm(startCoord, _nameGenerator.Generate()));
+            _worms.Add(new Worm(startCoord, _nameGenerator.Generate(), _wormLogic));
         }
         
         private void AddFood()
         {
-            _food.Add(new Food(FoodCoordGenerator.GenerateFoodCoord(this)));
+            _food.Add(_foodGenerator.GenerateFood(this));
         }
 
         private void DecreaseHealths()

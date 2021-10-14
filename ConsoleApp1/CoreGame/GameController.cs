@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
+using ConsoleApp1.WormsLogic;
 
 namespace ConsoleApp1
 {
@@ -141,7 +142,7 @@ namespace ConsoleApp1
         
         private void AddWorm((int, int) startCoord)
         {
-            _worms.Add(new Worm(startCoord, _randomNumberGenerator.Generate()));
+            _worms.Add(new Worm(startCoord, _randomNumberGenerator.Generate(), new OptionalLogic()));
         }
         
         private void AddFood()
