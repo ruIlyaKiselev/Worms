@@ -1,62 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1;
 using ConsoleApp1.Generators;
+using ConsoleApp1.WormsLogic;
 using NUnit.Framework;
 
 namespace TestProject1.FoodGenerators
 {
     public class FoodGenerationTest
     {
-        private class TmpInfoProvider: IWorldInfoProvider
-        {
-            public List<Food> food = new();
-            public List<Worm> worms = new();
-            public List<IWormInfoProvider> ProvideWorms()
-            {
-                return worms.Cast<IWormInfoProvider>().ToList();
-            }
-
-            public List<IFoodInfoProvider> ProvideFood()
-            {
-                return food.Cast<IFoodInfoProvider>().ToList();
-            }
-
-            public GameField ProvideGameField()
-            {
-                return null;
-            }
-
-            public int ProvideGameIteration()
-            {
-                return 0;
-            }
-        }
         
         [Test]
         public void UniqueFoodPositionsTest()
         {
-            TmpInfoProvider tmpInfoProvider = new TmpInfoProvider();
+            World world = new World(
+                new FoodGenerator(), 
+                new RandomNameGenerator(new Random()), 
+                new OptionalLogic(), 
+                null
+            );
             IFoodGenerator generator = new FoodGenerator();
             for (var i = 0; i < 100; i++)
             {
-                var newFood = generator.GenerateFood(tmpInfoProvider);
-                Assert.AreEqual(tmpInfoProvider.food.Contains(newFood), false);
-                tmpInfoProvider.food.Add(newFood);
+                var newFood = generator.GenerateFood(world);
+                var storedFoodCoords = world.GetFood().Select(food => food.ProvidePosition()).ToList();
+                Assert.AreEqual(storedFoodCoords.Contains(newFood.CurrentPosition), false);
+                world.GetFood().Add(newFood);
             }
         }
         
         [Test]
-        public void GetNewFoodTest_FoodOnWorm_FoodEaten()
+        public void AddFoodToWormPositionTest()
         {
-            // var namesGenerator = new NamesGenerator();
-            // var worm = new Worm(namesGenerator.Generate(), 0, 0);
-            // var foodGenerator = new CustomFoodGenerator(new List<Coord> {new() {X = 0, Y = 0}});
-            // var world = new World(foodGenerator, namesGenerator, new List<Worm> {worm});
-            // new CommandFactory(world, new MockLogger())
-            //     .NothingCommand().Invoke(1);
-            // Assert.AreEqual(world.GetWormById(1).GetVitality(), 19);
+            Worm worm = new Worm((0, 0), "test", new OptionalLogic());
+            Food food = new Food((0, 0));
+            
+            World world = new World(
+                new FoodGenerator(), 
+                new RandomNameGenerator(new Random()), 
+                new OptionalLogic(), 
+                null
+            );
+            
+            world.AddWorm(worm);
+            
+            Assert.AreEqual((world.GetWorms()[0].Health), 10);
+            Assert.AreEqual((world.GetFood().Count), 0);
+            Assert.AreEqual((world.GetWorms().Count), 1);
+            
+            world.AddFood(food);
+            world.DecreaseHealths();
+            
+            Assert.AreEqual((world.GetWorms()[0].Health), 19);
+            Assert.AreEqual((world.GetFood().Count), 0);
+            Assert.AreEqual((world.GetWorms().Count), 1);
         }
     }
 }

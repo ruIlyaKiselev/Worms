@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleApp1.Generators;
@@ -10,18 +9,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace ConsoleApp1
 {
-    public class GameControllerService: IHostedService, IWorldInfoProvider
+    public class GameControllerService: IHostedService
     {
-        private List<Worm> _worms = new();
-        private List<Food> _food = new();
-        private int _gameIterationCounter;
-
         private IFoodGenerator _foodGenerator;
         private INameGenerator _nameGenerator;
         private IWormLogic _wormLogic;
         private ILogger _logger;
 
-        private GameField _gameField = new();
+        private World _world;
         
         public GameControllerService(
             IFoodGenerator foodGenerator,
@@ -35,6 +30,8 @@ namespace ConsoleApp1
             _nameGenerator = nameGenerator;
             _wormLogic = wormLogic;
             _logger = logger;
+            
+            _world = new World(foodGenerator, nameGenerator, wormLogic, logger);
         }
         
         public Task StartAsync(CancellationToken cancellationToken)
@@ -51,46 +48,46 @@ namespace ConsoleApp1
         
         public void GameProcess()
         {
-            AddWorm((0, 0));
+            _world.AddWorm(new Worm((0, 0), _nameGenerator.Generate(), _wormLogic));
 
-            for (_gameIterationCounter = 0; _gameIterationCounter != GameContract.NumberOfSteps; _gameIterationCounter++)
+            for (int i = 0; i != GameContract.NumberOfSteps; i++)
             {
                 DecideWormsIntents();
-                DecreaseHealths();
-                AddFood();
-                _logger.LogNewEvent(this);
+                _world.DecreaseHealths();
+                _world.AddFood(_foodGenerator.GenerateFood(_world));
+                _logger.LogNewEvent(_world);
             }
         }
         
         private void DecideWormsIntents()
         {
-            foreach (var worm in new List<Worm>(_worms))
+            foreach (var worm in new List<Worm>(_world.GetWorms()))
             {
                 var wormX = worm.CurrentPosition.Item1;
                 var wormY = worm.CurrentPosition.Item2;
-                var (wormAction, wormDirection) = worm.GetIntent(this);
+                var (wormAction, wormDirection) = worm.GetIntent(_world);
 
                 if (wormAction == Actions.Move)
                 {
                     switch (wormDirection)
                     {
                         case Directions.Top:
-                            if (CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
+                            if (_world.CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
                             {
                                 worm.CurrentPosition = (wormX, wormY + 1);
                             } break;
                         case Directions.Bottom:
-                            if (CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
+                            if (_world.CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
                             {
                                 worm.CurrentPosition = (wormX, wormY - 1);
                             } break;
                         case Directions.Right:
-                            if (CheckCeil((wormX + 1, wormY)) != FieldObjects.Worm)
+                            if (_world.CheckCeil((wormX + 1, wormY)) != FieldObjects.Worm)
                             {
                                 worm.CurrentPosition = (wormX + 1, wormY);
                             } break;
                         case Directions.Left:
-                            if (CheckCeil((wormX - 1, wormY)) != FieldObjects.Worm)
+                            if (_world.CheckCeil((wormX - 1, wormY)) != FieldObjects.Worm)
                             {
                                 worm.CurrentPosition = (wormX - 1, wormY);
                             } break;
@@ -101,27 +98,27 @@ namespace ConsoleApp1
                     switch (wormDirection)
                     {
                         case Directions.Top:
-                            if (CheckCeil((wormX, wormY + 1)) == FieldObjects.Empty)
+                            if (_world.CheckCeil((wormX, wormY + 1)) == FieldObjects.Empty)
                             {
-                                AddWorm((wormX, wormY + 1));
+                                _world.AddWorm(new Worm((wormX, wormY + 1), _nameGenerator.Generate(), _wormLogic));
                                 worm.Health -= 10;
                             } break;
                         case Directions.Bottom:
-                            if (CheckCeil((wormX, wormY - 1)) == FieldObjects.Empty)
+                            if (_world.CheckCeil((wormX, wormY - 1)) == FieldObjects.Empty)
                             {
-                                AddWorm((wormX, wormY - 1));
+                                _world.AddWorm(new Worm((wormX, wormY - 1), _nameGenerator.Generate(), _wormLogic));
                                 worm.Health -= 10;
                             } break;
                         case Directions.Right:
-                            if (CheckCeil((wormX + 1, wormY)) == FieldObjects.Empty)
+                            if (_world.CheckCeil((wormX + 1, wormY)) == FieldObjects.Empty)
                             {
-                                AddWorm((wormX + 1, wormY));
+                                _world.AddWorm(new Worm((wormX + 1, wormY), _nameGenerator.Generate(), _wormLogic));
                                 worm.Health -= 10;
                             } break;
                         case Directions.Left:
-                            if (CheckCeil((wormX - 1, wormY)) == FieldObjects.Empty)
+                            if (_world.CheckCeil((wormX - 1, wormY)) == FieldObjects.Empty)
                             {
-                                AddWorm((wormX - 1, wormY));
+                                _world.AddWorm(new Worm((wormX - 1, wormY), _nameGenerator.Generate(), _wormLogic));
                                 worm.Health -= 10;
                             } break;
                     }
@@ -133,84 +130,19 @@ namespace ConsoleApp1
                 }
             }
         }
-
-        FieldObjects CheckCeil((int, int) ceilCoords)
-        {
-            var foodCoordList = _food.Select(food => food.ProvidePosition()).ToList();
-            var wormsCoordList = _worms.Select(worms => worms.ProvidePosition()).ToList();
-
-            if (wormsCoordList.Contains(ceilCoords))
-            {
-                return FieldObjects.Worm;
-            }
-            
-            if (foodCoordList.Contains(ceilCoords))
-            {
-                return FieldObjects.Food;
-            }
-
-            return FieldObjects.Empty;
-        }
-        
         private bool CheckFoodEat((int, int) wormPosition)
         {
-            foreach (var food in _food)
+            foreach (var food in _world.GetFood())
             {
                 if (food.CurrentPosition.Item1 == wormPosition.Item1 &&
                     food.CurrentPosition.Item2 == wormPosition.Item2)
                 {
-                    _food.Remove(food);
+                    _world.GetFood().Remove(food);
                     return true;
                 }
             }
 
             return false;
-        }
-        
-        private void AddWorm((int, int) startCoord)
-        {
-            _worms.Add(new Worm(startCoord, _nameGenerator.Generate(), _wormLogic));
-        }
-        
-        private void AddFood()
-        {
-            _food.Add(_foodGenerator.GenerateFood(this));
-        }
-
-        private void DecreaseHealths()
-        {
-            foreach (var worm in _worms)
-            {
-                worm.DecreaseHealth();
-            }
-            
-            foreach (var food in _food)
-            {
-                food.DecreaseHealth();
-            }
-            
-            _worms.RemoveAll(worm => worm.IsDeath);
-            _food.RemoveAll(food => food.IsDeath);
-        }
-
-        public List<IWormInfoProvider> ProvideWorms()
-        {
-            return _worms.Cast<IWormInfoProvider>().ToList();
-        }
-
-        public List<IFoodInfoProvider> ProvideFood()
-        {
-            return _food.Cast<IFoodInfoProvider>().ToList();
-        }
-
-        public GameField ProvideGameField()
-        {
-            return (GameField)_gameField.Clone();
-        }
-
-        public int ProvideGameIteration()
-        {
-            return _gameIterationCounter;
         }
     }
 }

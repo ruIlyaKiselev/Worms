@@ -63,5 +63,43 @@ namespace ConsoleApp1
         {
             return Health;
         }
+
+        public (int, int) GetAroundPosition(Directions direction)
+        {
+            return direction switch
+            {
+                Directions.Bottom => (CurrentPosition.Item1, CurrentPosition.Item2 - 1),
+                Directions.Top => (CurrentPosition.Item1, CurrentPosition.Item2 + 1),
+                Directions.Left => (CurrentPosition.Item1 - 1, CurrentPosition.Item2),
+                Directions.Right => (CurrentPosition.Item1 + 1, CurrentPosition.Item2),
+                _ => CurrentPosition
+            };
+        }
+        public void Move(Directions direction, IWorldInfoProvider infoProvider)
+        {
+            switch (direction)
+            {
+                case Directions.Bottom:
+                {
+                    CurrentPosition = (CurrentPosition.Item1, CurrentPosition.Item2 - 1);
+                    break;
+                }
+                case Directions.Top:
+                {
+                    CurrentPosition = (CurrentPosition.Item1, CurrentPosition.Item2 + 1);
+                    break;
+                }
+                case Directions.Left:
+                {
+                    CurrentPosition = (CurrentPosition.Item1 - 1, CurrentPosition.Item2);
+                    break;
+                }
+                case Directions.Right:
+                {
+                    CurrentPosition = (CurrentPosition.Item1 + 1, CurrentPosition.Item2);
+                    break;
+                }
+            }
+        }
     }
 }

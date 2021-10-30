@@ -12,10 +12,10 @@ namespace ConsoleApp1
         public int id = 1;
         public string name = "first";
 
-        private List<Worm> _worms = new();
-        private List<Food> _food = new();
-        private int _gameIterationCounter;
-
+        private readonly List<Worm> _worms = new();
+        private readonly List<Food> _food = new();
+        public int _gameIterationCounter;
+        
         private IFoodGenerator _foodGenerator;
         private INameGenerator _nameGenerator;
         private IWormLogic _wormLogic;
@@ -23,6 +23,19 @@ namespace ConsoleApp1
         
         private GameField _gameField = new();
 
+        public World(
+            IFoodGenerator foodGenerator,
+            INameGenerator nameGenerator,
+            IWormLogic wormLogic,
+            ILogger logger
+        ) 
+        {
+            _foodGenerator = foodGenerator;
+            _nameGenerator = nameGenerator;
+            _wormLogic = wormLogic;
+            _logger = logger;
+        }
+        
         public List<Worm> GetWorms()
         {
             return _worms;
@@ -47,18 +60,20 @@ namespace ConsoleApp1
 
         public void AddFood(Food food)
         {
-            foreach (Worm worm in _worms)
-            {
-                if (worm.CurrentPosition == food.CurrentPosition)
-                {
-                    worm.Health += 10;
-                    return;
-                }
-            }
-
             if (CheckCeil(food.CurrentPosition) == FieldObjects.Empty)
             {
                 _food.Add(food);
+            }
+            else
+            {
+                foreach (Worm worm in _worms)
+                {
+                    if (worm.CurrentPosition == food.CurrentPosition)
+                    {
+                        worm.Health += 10;
+                        return;
+                    }
+                }
             }
         }
 
@@ -78,6 +93,56 @@ namespace ConsoleApp1
             }
 
             return FieldObjects.Empty;
+        }
+        
+        public void DecreaseHealths()
+        {
+            foreach (var worm in _worms)
+            {
+                worm.DecreaseHealth();
+            }
+            
+            foreach (var food in _food)
+            {
+                food.DecreaseHealth();
+            }
+            
+            _worms.RemoveAll(worm => worm.IsDeath);
+            _food.RemoveAll(food => food.IsDeath);
+        }
+
+        public void MoveWorm(Worm worm, Directions direction)
+        {
+            var futurePosition = worm.GetAroundPosition(direction);
+            
+            if (CheckCeil(futurePosition) == FieldObjects.Worm)
+            {
+                throw new WormMovementException();
+            }
+            
+            worm.Move(direction, this);
+            
+            foreach (var food in _food.ToArray())
+            {
+                if (food.CurrentPosition == futurePosition)
+                {
+                    _food.Remove(food);
+                    worm.Health += 10;
+                }
+            }
+        }
+
+        public void BudWorm(Worm worm, Directions direction)
+        {
+            var futurePosition = worm.GetAroundPosition(direction);
+            
+            if (CheckCeil(futurePosition) != FieldObjects.Empty)
+            {
+                throw new WormBuddingException();
+            }
+
+            worm.Health -= 10;
+            AddWorm(new Worm(futurePosition, _nameGenerator.Generate(), _wormLogic));
         }
         
         public List<IWormInfoProvider> ProvideWorms()

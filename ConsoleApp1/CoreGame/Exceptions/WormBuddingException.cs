@@ -2,7 +2,7 @@
 
 namespace ConsoleApp1.Exceptions
 {
-    public class AddingFoodException: ArgumentException
+    public class WormBuddingException: Exception
     {
         
     }
