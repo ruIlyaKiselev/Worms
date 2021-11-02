@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConsoleApp1.Generators
@@ -8,8 +9,7 @@ namespace ConsoleApp1.Generators
         private static readonly Random _random = new(DateTime.Now.Second);
         
         /*
-         * функция генерации координат, которые гарантированно не выходят за пределы массива-игрового поля
-         * и не совпадают с коордитатами другой еды на игровом поле
+         * функция генерации координат, которые гарантированно не совпадают с коордитатами другой еды на игровом поле
          */
         public static (int, int) GenerateFoodCoord(IWorldInfoProvider infoProvider)
         {
@@ -25,7 +25,38 @@ namespace ConsoleApp1.Generators
             
             return coordForResult;
         }
+        
+        public static (int, int) GenerateFoodCoord(List<(int, int)> foodCoords)
+        {
+            var foodLifetime = GameContract.StartFoodHealth / GameContract.HealthDecreasePerIteration;
 
+            if (foodCoords.Count >= foodLifetime)
+                return GetCoordsForLifetimePeriod(foodCoords, foodCoords.Count, foodLifetime);
+            
+            var coordForResult = NextNormalPair();
+
+            while (foodCoords.Contains(coordForResult))
+            {
+                coordForResult = NextNormalPair();
+            }
+            
+            return coordForResult;
+
+        }
+
+        private static (int, int) GetCoordsForLifetimePeriod(List<(int, int)> foodCoords, int index, int foodLifetime)
+        {
+            var actualRange = foodCoords.GetRange(index - foodLifetime, foodLifetime);
+
+            var coordForResult = NextNormalPair();
+            
+            while (actualRange.Contains(coordForResult))
+            {
+                coordForResult = NextNormalPair();
+            }
+
+            return coordForResult;
+        }
 
         /*
          * функция взятия пары случайных координат из нормального распределения; генерируются независимо друг от друга

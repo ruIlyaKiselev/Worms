@@ -8,7 +8,7 @@ namespace TestProject1.Naming
     public class UniqueNamesGenerationTest
     {
         [Test]
-        public void GetNewFoodTest_FoodOnWorm_FoodEaten()
+        public void RandomsNamesAreUniqueTest()
         {
             INameGenerator nameGenerator = new RandomNameGenerator(new Random());
             var usedNames = new List<String>();
