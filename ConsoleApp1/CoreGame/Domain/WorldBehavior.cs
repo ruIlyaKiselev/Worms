@@ -4,7 +4,7 @@ using ConsoleApp1.Generators;
 
 namespace ConsoleApp1
 {
-    public class WorldBehavior
+    public class WorldBehavior: IFoodGenerator
     {
         public String Name { get; set; }
         public List<(int, int)> FoodCoords { get; set; }
@@ -25,6 +25,11 @@ namespace ConsoleApp1
         {
             Name = name;
             FoodCoords = foodCoords;
+        }
+
+        public Food GenerateFood(IWorldInfoProvider worldInfoProvider)
+        {
+            return new Food(FoodCoords[worldInfoProvider.ProvideGameIteration()]);
         }
     }
 }

@@ -145,6 +145,93 @@ namespace ConsoleApp1
             AddWorm(new Worm(futurePosition, _nameGenerator.Generate(), _wormLogic));
         }
         
+        public void DecideWormsIntents()
+        {
+            foreach (var worm in new List<Worm>(GetWorms()))
+            {
+                var wormX = worm.CurrentPosition.Item1;
+                var wormY = worm.CurrentPosition.Item2;
+                var (wormAction, wormDirection) = worm.GetIntent(this);
+
+                if (wormAction == Actions.Move)
+                {
+                    switch (wormDirection)
+                    {
+                        case Directions.Top:
+                            if (CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX, wormY + 1);
+                            } break;
+                        case Directions.Bottom:
+                            if (CheckCeil((wormX, wormY - 1)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX, wormY - 1);
+                            } break;
+                        case Directions.Right:
+                            if (CheckCeil((wormX + 1, wormY)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX + 1, wormY);
+                            } break;
+                        case Directions.Left:
+                            if (CheckCeil((wormX - 1, wormY)) != FieldObjects.Worm)
+                            {
+                                worm.CurrentPosition = (wormX - 1, wormY);
+                            } break;
+                    }
+                }
+                else if (wormAction == Actions.Budding)
+                {
+                    switch (wormDirection)
+                    {
+                        case Directions.Top:
+                            if (CheckCeil((wormX, wormY + 1)) == FieldObjects.Empty)
+                            {
+                                AddWorm(new Worm((wormX, wormY + 1), _nameGenerator.Generate(), _wormLogic));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Bottom:
+                            if (CheckCeil((wormX, wormY - 1)) == FieldObjects.Empty)
+                            {
+                                AddWorm(new Worm((wormX, wormY - 1), _nameGenerator.Generate(), _wormLogic));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Right:
+                            if (CheckCeil((wormX + 1, wormY)) == FieldObjects.Empty)
+                            {
+                                AddWorm(new Worm((wormX + 1, wormY), _nameGenerator.Generate(), _wormLogic));
+                                worm.Health -= 10;
+                            } break;
+                        case Directions.Left:
+                            if (CheckCeil((wormX - 1, wormY)) == FieldObjects.Empty)
+                            {
+                                AddWorm(new Worm((wormX - 1, wormY), _nameGenerator.Generate(), _wormLogic));
+                                worm.Health -= 10;
+                            } break;
+                    }
+                }
+
+                if (CheckFoodEat((wormX, wormY)))
+                {
+                    worm.Health += 10;
+                }
+            }
+        }
+        
+        private bool CheckFoodEat((int, int) wormPosition)
+        {
+            foreach (var food in GetFood())
+            {
+                if (food.CurrentPosition.Item1 == wormPosition.Item1 &&
+                    food.CurrentPosition.Item2 == wormPosition.Item2)
+                {
+                    GetFood().Remove(food);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         public List<IWormInfoProvider> ProvideWorms()
         {
             return _worms.Cast<IWormInfoProvider>().ToList();

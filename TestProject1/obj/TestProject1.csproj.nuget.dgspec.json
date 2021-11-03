@@ -52,7 +52,11 @@
             },
             "Npgsql": {
               "target": "Package",
-              "version": "[6.0.0-rc.2, )"
+              "version": "[5.0.10, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[5.0.10, )"
             }
           },
           "imports": [
@@ -123,6 +127,10 @@
             "NUnit3TestAdapter": {
               "target": "Package",
               "version": "[3.17.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[5.0.10, )"
             },
             "coverlet.collector": {
               "target": "Package",

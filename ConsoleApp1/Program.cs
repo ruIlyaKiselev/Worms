@@ -28,6 +28,9 @@ namespace ConsoleApp1
                     Console.WriteLine(postgresDatabase.GetVersion() + "))))))");
                     bool databaseExists = postgresDatabase.CheckDatabaseExists(PostgresContract.DBname);
 
+                    // WorldBehavior worldBehavior = new WorldBehavior("world1");
+                    // postgresDatabase.SaveWorldBehavior(worldBehavior.Name, Converters.convertListToJson(worldBehavior.FoodCoords));
+
                     if (!databaseExists)
                     {
                         postgresDatabase.CreateDatabase(PostgresContract.DBname);
