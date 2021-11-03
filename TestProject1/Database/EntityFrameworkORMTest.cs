@@ -95,31 +95,57 @@ namespace TestProject1.Database
         [Test]
         public void SameWormsLogicTest()
         {
-            var foodPattern = new List<(int, int)>();
-            foodPattern.Add((5, 0));
-            foodPattern.Add((0, 0));
-            foodPattern.Add((-5, 0));
-            foodPattern.Add((0, 0));
-            foodPattern.Add((0, 5));
-            foodPattern.Add((0, 0));
-            foodPattern.Add((0, -5));
-            foodPattern.Add((0, 0));
+            PostgresDatabaseORM database = new PostgresDatabaseORM();
+            ConsoleApp1.WorldBehavior testWorldBehavior = new ConsoleApp1.WorldBehavior("same");
+            
+            database.SaveWorldBehavior(testWorldBehavior.ToDTO());
 
-            var foodList = new List<(int, int)>();
+            ConsoleApp1.WorldBehavior restoredWorldBehavior = database.GetWorldBehaviorByName("same").ToDomain();
+            
+            List<(int, int)> coordHistory1 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
+            List<(int, int)> coordHistory2 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
+            List<(int, int)> coordHistory3 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
+            
+            Assert.AreEqual(coordHistory1.Count, coordHistory2.Count);
+            Assert.AreEqual(coordHistory2.Count, coordHistory3.Count);
 
-            for (int i = 0; i != GameContract.NumberOfSteps / foodPattern.Count + 1; i++)
+            for (int i = 0; i != coordHistory1.Count; i++)
             {
-                foodList.AddRange(foodPattern.ToList());    
+                Assert.AreEqual(coordHistory1[i], coordHistory2[i]);
+                Assert.AreEqual(coordHistory2[i], coordHistory3[i]);
             }
             
-            foodList.RemoveRange(GameContract.NumberOfSteps, foodList.Count - GameContract.NumberOfSteps);
+            database.DeleteWorldBehavior(testWorldBehavior.Name);
+        }
+
+        private List<(int, int)> EmulateGameProcess(World world, ConsoleApp1.WorldBehavior worldBehavior)
+        {
+            List<(int, int)> coordHistory = new List<(int, int)>();
             
-            Console.WriteLine(foodList.Count);
-            
-            ConsoleApp1.WorldBehavior testWorldBehavior = new ConsoleApp1.WorldBehavior("testSameBehavior", foodList);
-            World world = new World(testWorldBehavior, new RandomNameGenerator(new Random()), new OptionalLogic(), null);
-            
-            
+            for (int i = 0; i != GameContract.NumberOfSteps; i++)
+            {
+                world.DecideWormsIntents();
+                world.DecreaseHealths();
+                world.AddFood(worldBehavior.GenerateFood(world));
+
+                if (world.ProvideWorms().Count != 0)
+                {
+                    for (int j = 0; j != world.ProvideWorms().Count; j++)
+                    {
+                        coordHistory.Add(world.ProvideWorms()[j].ProvidePosition());
+                    }
+                }
+            }
+
+            return coordHistory;
+        }
+
+        private World InitWorld(ConsoleApp1.WorldBehavior worldBehavior)
+        {
+            World world = new World(worldBehavior, new RandomNameGenerator(new Random()), new OptionalLogic(), null);
+            world.AddWorm(new Worm((0, 0), "test", new OptionalLogic()));
+
+            return world;
         }
     }
 }

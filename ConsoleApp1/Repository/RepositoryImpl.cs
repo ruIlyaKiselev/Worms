@@ -1,42 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ConsoleApp1.Database;
 
 namespace ConsoleApp1.Repository
 {
     public class RepositoryImpl: IRepository
     {
-        private PostgresDatabase _database;
-        
-        public RepositoryImpl(PostgresDatabase database)
+        private PostgresDatabaseORM _postgresDatabase;
+
+        public RepositoryImpl(PostgresDatabaseORM database)
         {
-            _database = database;
+            _postgresDatabase = database;
         }
         
         public void SaveWorldBehavior(WorldBehavior worldBehavior)
         {
-            _database.SaveWorldBehavior(worldBehavior.Name, Converters.convertListToJson(worldBehavior.FoodCoords));
+            _postgresDatabase.SaveWorldBehavior(worldBehavior.ToDTO());
         }
 
         public WorldBehavior GetWorldBehaviorByName(string name)
         {
-            var requestResult = _database.GetWorldBehaviorByName(name);
-            return new WorldBehavior(requestResult[0], Converters.convertJsonToList<(int, int)>(requestResult[1]));
+            return _postgresDatabase.GetWorldBehaviorByName(name).ToDomain();
         }
-
-        /*TODO: Implement it*/
+        
         public List<WorldBehavior> GetAllWorldBehaviors()
         {
-            return new List<WorldBehavior>();
+            return _postgresDatabase.GetAllWorldBehaviors().Select(it => it.ToDomain()).ToList();
         }
 
         public void UpdateWorldBehavior(WorldBehavior worldBehavior)
         {
-            _database.UpdateWorldBehaviorByName(worldBehavior.Name, Converters.convertListToJson(worldBehavior.FoodCoords));
+            _postgresDatabase.EditWorldBehavior(worldBehavior.Name, Converters.convertListToJson(worldBehavior.FoodCoords));
         }
 
         public void DeleteWorldBehavior(string name)
         {
-            _database.DeleteWorldBehaviorByName(name);
+            _postgresDatabase.DeleteWorldBehavior(name);
         }
     }
 }
