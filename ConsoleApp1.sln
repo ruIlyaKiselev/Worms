@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{0C06EAFF-FE71-4C27-804E-020EBF12053F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppModule", "AppModule\AppModule.csproj", "{0C06EAFF-FE71-4C27-804E-020EBF12053F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{CF25FA2E-5696-4D48-BA4B-4152A4680EF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule", "TestModule\TestModule.csproj", "{CF25FA2E-5696-4D48-BA4B-4152A4680EF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkModule", "NetworkModule\NetworkModule.csproj", "{A872EF5C-5900-447C-885E-B563FC3C860E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{CF25FA2E-5696-4D48-BA4B-4152A4680EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF25FA2E-5696-4D48-BA4B-4152A4680EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF25FA2E-5696-4D48-BA4B-4152A4680EF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A872EF5C-5900-447C-885E-B563FC3C860E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A872EF5C-5900-447C-885E-B563FC3C860E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A872EF5C-5900-447C-885E-B563FC3C860E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A872EF5C-5900-447C-885E-B563FC3C860E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
