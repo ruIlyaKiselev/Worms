@@ -1,7 +1,7 @@
-﻿namespace ConsoleApp1.WormsLogic
+﻿using ConsoleApp1;
+using ConsoleApp1.WormsLogic;
+
+public interface IWormLogic
 {
-    public interface IWormLogic
-    {
-        public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider);
-    }
+    public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider);
 }

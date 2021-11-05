@@ -2,10 +2,12 @@
 using ConsoleApp1.Database;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
+using ConsoleApp1.Network;
 using ConsoleApp1.Repository;
 using ConsoleApp1.WormsLogic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Refit;
 
 namespace ConsoleApp1
 {
@@ -30,7 +32,11 @@ namespace ConsoleApp1
                     services.AddScoped<INameGenerator, RandomNameGenerator>(_ => new RandomNameGenerator(new Random()));
                     services.AddScoped<IWormLogic, OptionalLogic>();
                     services.AddScoped<ILogger, Logger>();
-                    services.AddScoped<IRepository, RepositoryImpl>(_ => new RepositoryImpl(new PostgresDatabaseORM()));
+                    services.AddScoped<IRepository, RepositoryImpl>(_ => new RepositoryImpl(
+                        new PostgresDatabaseORM(),
+                        RestService.For<INetworkService>(NetworkContract.BASE_URL)
+                        )
+                    );
                 });
         }
 

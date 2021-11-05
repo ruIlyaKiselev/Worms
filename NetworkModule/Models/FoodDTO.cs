@@ -2,7 +2,7 @@
 
 namespace ConsoleApp1.Network.Entity
 {
-    public class FoodDTO
+    public class FoodDTO: IFoodInfoProvider
     {
         [JsonProperty("expiresIn")]
         public int ExpiresIn { get; set; }
@@ -10,10 +10,14 @@ namespace ConsoleApp1.Network.Entity
         [JsonProperty("position")]
         public PositionDTO Position { get; set; }
 
-        public FoodDTO(int expiresIn, (int, int) position)
+        public (int, int) ProvidePosition()
         {
-            ExpiresIn = expiresIn;
-            Position = new PositionDTO(position.Item1, position.Item2);
+            return (Position.X, Position.Y);
+        }
+
+        public int ProvideHealth()
+        {
+            return ExpiresIn;
         }
     }
 }

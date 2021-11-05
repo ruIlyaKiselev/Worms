@@ -11,7 +11,6 @@ namespace ConsoleApp1
     {
         private List<Worm> _worms = new();
         private List<Food> _food = new();
-        private GameField _gameField = new();
         private Logger _logger;
         private int _gameIterationCounter;
         private RandomNameGenerator _randomNumberGenerator;
@@ -174,11 +173,6 @@ namespace ConsoleApp1
         public List<IFoodInfoProvider> ProvideFood()
         {
             return _food.Cast<IFoodInfoProvider>().ToList();
-        }
-
-        public GameField ProvideGameField()
-        {
-            return (GameField)_gameField.Clone();
         }
 
         public int ProvideGameIteration()

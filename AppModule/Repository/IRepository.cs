@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using ConsoleApp1.Network.Entity;
 
 namespace ConsoleApp1.Repository
 {
@@ -9,5 +11,7 @@ namespace ConsoleApp1.Repository
         public List<WorldBehavior> GetAllWorldBehaviors();
         public void UpdateWorldBehavior(WorldBehavior worldBehavior);
         public void DeleteWorldBehavior(string name);
+
+        public (Actions, Directions) GetWormActionFromAPI(string wormName, IWorldInfoProvider infoProvider);
     }
 }

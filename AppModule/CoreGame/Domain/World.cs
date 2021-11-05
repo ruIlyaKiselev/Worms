@@ -20,8 +20,6 @@ namespace ConsoleApp1
         private INameGenerator _nameGenerator;
         private IWormLogic _wormLogic;
         private ILogger _logger;
-        
-        private GameField _gameField = new();
 
         public World(
             IFoodGenerator foodGenerator,
@@ -240,11 +238,6 @@ namespace ConsoleApp1
         public List<IFoodInfoProvider> ProvideFood()
         {
             return _food.Cast<IFoodInfoProvider>().ToList();
-        }
-
-        public GameField ProvideGameField()
-        {
-            return (GameField)_gameField.Clone();
         }
 
         public int ProvideGameIteration()

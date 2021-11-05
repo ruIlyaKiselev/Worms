@@ -2,7 +2,7 @@
 
 namespace ConsoleApp1.Network.Entity
 {
-    public partial class WormDTO
+    public partial class WormDTO: IWormInfoProvider
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -13,11 +13,19 @@ namespace ConsoleApp1.Network.Entity
         [JsonProperty("position")]
         public PositionDTO Position { get; set; }
 
-        public WormDTO(string name, int lifeStrength, (int, int) position)
+        public string ProvideName()
         {
-            Name = name;
-            LifeStrength = lifeStrength;
-            Position = new PositionDTO(position.Item1, position.Item2);
+            return Name;
+        }
+
+        public (int, int) ProvidePosition()
+        {
+            return (Position.X, Position.Y);
+        }
+
+        public int ProvideHealth()
+        {
+            return LifeStrength;
         }
     }
 }

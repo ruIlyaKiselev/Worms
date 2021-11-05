@@ -7,5 +7,10 @@ namespace ConsoleApp1.Network.Entity
     {
         [JsonProperty("action")]
         public ActionDTO Action { get; set; }
+
+        public InfoFromServer(ActionDTO action)
+        {
+            Action = action;
+        }
     }
 }

@@ -6,7 +6,6 @@ namespace ConsoleApp1
     {
         List<IWormInfoProvider> ProvideWorms();
         List<IFoodInfoProvider> ProvideFood();
-        GameField ProvideGameField();
         int ProvideGameIteration();
     }
 }
