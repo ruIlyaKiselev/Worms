@@ -17,6 +17,7 @@ namespace TestProject1.Movement
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             
@@ -39,6 +40,7 @@ namespace TestProject1.Movement
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             
@@ -62,6 +64,7 @@ namespace TestProject1.Movement
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             world.AddWorm(new Worm((0, 0), "test", new OptionalLogic()));

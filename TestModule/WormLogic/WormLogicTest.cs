@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using ConsoleApp1;
+using ConsoleApp1.Database;
 using ConsoleApp1.Generators;
+using ConsoleApp1.Repository;
 using ConsoleApp1.WormsLogic;
 using NUnit.Framework;
 
@@ -16,6 +18,7 @@ namespace TestProject1.WormLogic
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             
@@ -45,6 +48,7 @@ namespace TestProject1.WormLogic
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             
@@ -75,6 +79,7 @@ namespace TestProject1.WormLogic
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             

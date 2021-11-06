@@ -17,6 +17,7 @@ namespace TestProject1.FoodGenerators
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             IFoodGenerator generator = new FoodGenerator();
@@ -39,6 +40,7 @@ namespace TestProject1.FoodGenerators
                 new FoodGenerator(), 
                 new RandomNameGenerator(new Random()), 
                 new OptionalLogic(), 
+                null,
                 null
             );
             

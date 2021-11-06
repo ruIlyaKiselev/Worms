@@ -36,7 +36,7 @@ namespace ConsoleApp1
             _logger = logger;
             _repository = repository;
             
-            _world = new World(foodGenerator, nameGenerator, wormLogic, logger);
+            _world = new World(foodGenerator, nameGenerator, wormLogic, logger, repository);
             _foodSequence = repository.GetWorldBehaviorByName("world1").FoodCoords;
         }
         

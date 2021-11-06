@@ -1,5 +1,4 @@
 ﻿using ConsoleApp1;
-using ConsoleApp1.WormsLogic;
 
 public interface IWormLogic
 {

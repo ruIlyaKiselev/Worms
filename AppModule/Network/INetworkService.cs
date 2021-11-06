@@ -6,7 +6,7 @@ namespace ConsoleApp1.Network
 {
     public interface INetworkService
     {
-        [Post("/{wormName})/getAction")]
+        [Post("/{wormName}/getAction")]
         Task<InfoFromServer> GetWormAction([AliasAs("wormName")] string wormName, [Body]InfoForServer infoForServer);
     }
 }

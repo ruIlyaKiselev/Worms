@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ConsoleApp1;
@@ -29,7 +30,7 @@ namespace NetworkModule.Controllers
             var worm = infoForServer.Worms.Find(it => it.Name == wormName);
             IWormLogic wormLogic = new OptionalLogic();
             
-            
+            Console.WriteLine($"From Client: {wormName}, {infoForServer != null}");
             var wormIntent = wormLogic.Decide(worm, infoForServer);
 
             string direction = "";
@@ -75,6 +76,10 @@ namespace NetworkModule.Controllers
             }
 
             ActionDTO actionDto = new ActionDTO(direction, split);
+            
+            Console.WriteLine(actionDto.Direction);
+            Console.WriteLine(actionDto.Split);
+
             return new InfoFromServer(actionDto);
         }
     }

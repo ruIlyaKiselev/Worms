@@ -90,5 +90,21 @@ namespace ConsoleApp1.WormsLogic
 
             return nearestFoodCoord;
         }
+
+        private static bool ThereIsAPlaceForBudding((int, int) wormCoords, IWorldInfoProvider infoProvider)
+        {
+            List<(int, int)> aroundPositionsList = new List<(int, int)>
+            {
+                (wormCoords.Item1, wormCoords.Item2 + 1),
+                (wormCoords.Item1, wormCoords.Item2 - 1),
+                (wormCoords.Item1 + 1, wormCoords.Item2),
+                (wormCoords.Item1 - 1, wormCoords.Item2)
+            };
+
+            var foodCoordsList = infoProvider.ProvideFood().Select(it => it.ProvidePosition()).ToList();
+            var wormsCoordsList = infoProvider.ProvideWorms().Select(it => it.ProvidePosition()).ToList();
+
+            return aroundPositionsList.Except(foodCoordsList).Any() && aroundPositionsList.Except(wormsCoordsList).Any();
+        }
     }
 }

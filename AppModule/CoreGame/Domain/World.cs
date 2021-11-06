@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Exceptions;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Logging;
+using ConsoleApp1.Repository;
 using ConsoleApp1.WormsLogic;
 
 namespace ConsoleApp1
@@ -20,18 +22,21 @@ namespace ConsoleApp1
         private INameGenerator _nameGenerator;
         private IWormLogic _wormLogic;
         private ILogger _logger;
+        private IRepository _repository;
 
         public World(
             IFoodGenerator foodGenerator,
             INameGenerator nameGenerator,
             IWormLogic wormLogic,
-            ILogger logger
+            ILogger logger,
+            IRepository repository
         ) 
         {
             _foodGenerator = foodGenerator;
             _nameGenerator = nameGenerator;
             _wormLogic = wormLogic;
             _logger = logger;
+            _repository = repository;
         }
         
         public List<Worm> GetWorms()
@@ -75,7 +80,7 @@ namespace ConsoleApp1
             }
         }
 
-        public FieldObjects CheckCeil((int, int) ceilCoords)
+        private FieldObjects CheckCeil((int, int) ceilCoords)
         {
             var foodCoordList = _food.Select(food => food.ProvidePosition()).ToList();
             var wormsCoordList = _worms.Select(worms => worms.ProvidePosition()).ToList();
@@ -149,11 +154,12 @@ namespace ConsoleApp1
             {
                 var wormX = worm.CurrentPosition.Item1;
                 var wormY = worm.CurrentPosition.Item2;
-                var (wormAction, wormDirection) = worm.GetIntent(this);
 
-                if (wormAction == Actions.Move)
+                (Actions, Directions) wormIntent = _repository.GetWormActionFromAPI(worm.Name, this);
+                    
+                if (wormIntent.Item1 == Actions.Move)
                 {
-                    switch (wormDirection)
+                    switch (wormIntent.Item2)
                     {
                         case Directions.Top:
                             if (CheckCeil((wormX, wormY + 1)) != FieldObjects.Worm)
@@ -175,11 +181,15 @@ namespace ConsoleApp1
                             {
                                 worm.CurrentPosition = (wormX - 1, wormY);
                             } break;
+                        case Directions.None:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
-                else if (wormAction == Actions.Budding)
+                else if (wormIntent.Item1 == Actions.Budding)
                 {
-                    switch (wormDirection)
+                    switch (wormIntent.Item2)
                     {
                         case Directions.Top:
                             if (CheckCeil((wormX, wormY + 1)) == FieldObjects.Empty)
@@ -205,6 +215,10 @@ namespace ConsoleApp1
                                 AddWorm(new Worm((wormX - 1, wormY), _nameGenerator.Generate(), _wormLogic));
                                 worm.Health -= 10;
                             } break;
+                        case Directions.None:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
 

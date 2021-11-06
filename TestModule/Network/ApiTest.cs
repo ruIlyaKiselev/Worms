@@ -15,10 +15,15 @@ namespace TestProject1.Network
         [Test]
         public void ApiPostTest()
         {
-            World world = new World(new FoodGenerator(), new RandomNameGenerator(new Random()), new OptionalLogic(), null);
+            World world = new World(new FoodGenerator(), new RandomNameGenerator(new Random()), new OptionalLogic(), null, null);
             
             world.AddWorm(new Worm((1, 1), "John", new OptionalLogic()));
-            world.AddFood(new Food((2, -1)));
+            
+            world.AddFood(new Food((2, 1)));
+            world.AddFood(new Food((0, 1)));
+            world.AddFood(new Food((1, 0)));
+
+            // world.GetWorms()[0].Health = 50;
             
             var handler = new HttpClientHandler
             {
@@ -36,7 +41,7 @@ namespace TestProject1.Network
 
             InfoForServer infoForServer = new InfoForServer(world);
             var response = networkService.GetWormAction("John", infoForServer);
-            
+
             var result = response.Result.Action;
             Console.WriteLine(result.Direction);
             Console.WriteLine(result.Split);

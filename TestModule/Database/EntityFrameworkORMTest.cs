@@ -4,6 +4,8 @@ using System.Linq;
 using ConsoleApp1;
 using ConsoleApp1.Database;
 using ConsoleApp1.Generators;
+using ConsoleApp1.Network;
+using ConsoleApp1.Repository;
 using ConsoleApp1.WormsLogic;
 using NUnit.Framework;
 
@@ -97,9 +99,16 @@ namespace TestProject1.Database
         {
             PostgresDatabaseORM database = new PostgresDatabaseORM();
             ConsoleApp1.WorldBehavior testWorldBehavior = new ConsoleApp1.WorldBehavior("same");
-            
-            database.SaveWorldBehavior(testWorldBehavior.ToEntity());
 
+            try
+            {
+                database.SaveWorldBehavior(testWorldBehavior.ToEntity());
+            }
+            catch
+            {
+                // ignored
+            }
+            
             ConsoleApp1.WorldBehavior restoredWorldBehavior = database.GetWorldBehaviorByName("same").ToDomain();
             
             List<(int, int)> coordHistory1 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
@@ -142,7 +151,15 @@ namespace TestProject1.Database
 
         private World InitWorld(ConsoleApp1.WorldBehavior worldBehavior)
         {
-            World world = new World(worldBehavior, new RandomNameGenerator(new Random()), new OptionalLogic(), null);
+            World world = new World(
+                worldBehavior, 
+                new RandomNameGenerator(new Random()), 
+                new OptionalLogic(), 
+                null, 
+                new RepositoryImpl(
+                    new PostgresDatabaseORM(),
+                    NetworkServiceFactory.GetNetworkService())
+                );
             world.AddWorm(new Worm((0, 0), "test", new OptionalLogic()));
 
             return world;

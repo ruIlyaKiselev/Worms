@@ -34,8 +34,7 @@ namespace ConsoleApp1
                     services.AddScoped<ILogger, Logger>();
                     services.AddScoped<IRepository, RepositoryImpl>(_ => new RepositoryImpl(
                         new PostgresDatabaseORM(),
-                        RestService.For<INetworkService>(NetworkContract.BASE_URL)
-                        )
+                        NetworkServiceFactory.GetNetworkService())
                     );
                 });
         }
