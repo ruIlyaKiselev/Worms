@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ConsoleApp1;
+using ConsoleApp1.CoreGame.Domain;
 using ConsoleApp1.Database;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Repository;

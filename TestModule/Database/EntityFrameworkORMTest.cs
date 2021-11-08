@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1;
+using ConsoleApp1.CoreGame;
+using ConsoleApp1.CoreGame.Domain;
 using ConsoleApp1.Database;
 using ConsoleApp1.Generators;
 using ConsoleApp1.Network;
@@ -18,9 +20,9 @@ namespace TestProject1.Database
         {
             PostgresDatabaseORM database = new PostgresDatabaseORM();
             
-            ConsoleApp1.WorldBehavior worldBehavior1 = new ConsoleApp1.WorldBehavior("test1");
-            ConsoleApp1.WorldBehavior worldBehavior2 = new ConsoleApp1.WorldBehavior("test2");
-            ConsoleApp1.WorldBehavior worldBehavior3 = new ConsoleApp1.WorldBehavior("test3");
+            ConsoleApp1.CoreGame.Domain.WorldBehavior worldBehavior1 = new ConsoleApp1.CoreGame.Domain.WorldBehavior("test1");
+            ConsoleApp1.CoreGame.Domain.WorldBehavior worldBehavior2 = new ConsoleApp1.CoreGame.Domain.WorldBehavior("test2");
+            ConsoleApp1.CoreGame.Domain.WorldBehavior worldBehavior3 = new ConsoleApp1.CoreGame.Domain.WorldBehavior("test3");
             
             bool worldBehavior1Exists = database.CheckWorldBehaviorExists(worldBehavior1.Name);
             bool worldBehavior2Exists = database.CheckWorldBehaviorExists(worldBehavior2.Name);
@@ -98,18 +100,15 @@ namespace TestProject1.Database
         public void SameWormsLogicTest()
         {
             PostgresDatabaseORM database = new PostgresDatabaseORM();
-            ConsoleApp1.WorldBehavior testWorldBehavior = new ConsoleApp1.WorldBehavior("same");
 
-            try
+            if (!database.CheckWorldBehaviorExists("same"))
             {
-                database.SaveWorldBehavior(testWorldBehavior.ToEntity());
-            }
-            catch
-            {
-                // ignored
+                ConsoleApp1.CoreGame.Domain.WorldBehavior worldBehavior = new ConsoleApp1.CoreGame.Domain.WorldBehavior("same");
+                database.SaveWorldBehavior(worldBehavior.ToEntity());
             }
             
-            ConsoleApp1.WorldBehavior restoredWorldBehavior = database.GetWorldBehaviorByName("same").ToDomain();
+            
+            var restoredWorldBehavior = database.GetWorldBehaviorByName("same").ToDomain();
             
             List<(int, int)> coordHistory1 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
             List<(int, int)> coordHistory2 = EmulateGameProcess(InitWorld(restoredWorldBehavior), restoredWorldBehavior);
@@ -124,18 +123,19 @@ namespace TestProject1.Database
                 Assert.AreEqual(coordHistory2[i], coordHistory3[i]);
             }
             
-            database.DeleteWorldBehavior(testWorldBehavior.Name);
+            database.DeleteWorldBehavior("same");
         }
 
-        private List<(int, int)> EmulateGameProcess(World world, ConsoleApp1.WorldBehavior worldBehavior)
+        private List<(int, int)> EmulateGameProcess(World world, IFoodGenerator worldBehavior)
         {
             List<(int, int)> coordHistory = new List<(int, int)>();
             
             for (int i = 0; i != GameContract.NumberOfSteps; i++)
             {
+                world.AddFood(worldBehavior.GenerateFood(world));
                 world.DecideWormsIntents();
                 world.DecreaseHealths();
-                world.AddFood(worldBehavior.GenerateFood(world));
+                world.IncrementIteration();
 
                 if (world.ProvideWorms().Count != 0)
                 {
@@ -149,7 +149,7 @@ namespace TestProject1.Database
             return coordHistory;
         }
 
-        private World InitWorld(ConsoleApp1.WorldBehavior worldBehavior)
+        private World InitWorld(ConsoleApp1.CoreGame.Domain.WorldBehavior worldBehavior)
         {
             World world = new World(
                 worldBehavior, 
@@ -158,8 +158,13 @@ namespace TestProject1.Database
                 null, 
                 new RepositoryImpl(
                     new PostgresDatabaseORM(),
-                    NetworkServiceFactory.GetNetworkService())
-                );
+                    NetworkServiceFactory.GetNetworkService(
+                        NetworkContract.BASE_URL,
+                        NetworkContract.HOST,
+                        NetworkContract.PORT
+                    )
+                )
+            );
             world.AddWorm(new Worm((0, 0), "test", new OptionalLogic()));
 
             return world;

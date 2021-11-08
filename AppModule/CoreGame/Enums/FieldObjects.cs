@@ -1,12 +1,15 @@
-﻿namespace ConsoleApp1
+﻿namespace ConsoleApp1.CoreGame.Enums
 {
-    /*
-     * enum для типов объектов на игровом поле
-     */
+    /// <summary>
+    ///     enum для типов объектов на игровом поле
+    /// </summary>
     public enum FieldObjects
     {
-        Empty, // пустая клетка
-        Worm, // червячок
-        Food // еда
+        /// <summary>пустая клетка</summary>
+        Empty,
+        /// <summary>червячок</summary>
+        Worm,
+        /// <summary>еда</summary>
+        Food
     }
 }

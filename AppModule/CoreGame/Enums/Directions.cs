@@ -1,14 +1,19 @@
-﻿namespace ConsoleApp1
+﻿namespace ConsoleApp1.CoreGame.Enums
 {
-    /*
-     * enum для направлений движаения червячка
-     */
+    /// <summary>
+    ///     enum для направлений действия червячка
+    /// </summary>
     public enum Directions
     {
-        Top, // двигаться наверх
-        Bottom, // двигаться вниз
-        Right, // двигаться направо
-        Left, // двигаться налево
-        None // никуда не двигаться 
+        /// <summary>действие вверх</summary>
+        Top,
+        /// <summary>действие вниз</summary>
+        Bottom,
+        /// <summary>действие направо</summary>
+        Right,
+        /// <summary>действие налево</summary>
+        Left,
+        /// <summary>действие без направления???</summary>
+        None 
     }
 }

@@ -1,12 +1,15 @@
-﻿namespace ConsoleApp1
+﻿namespace ConsoleApp1.CoreGame.Enums
 {
-    /*
-     * enum для действий, которые передаются от червячка симулятору
-     */
+    /// <summary>
+    ///     enum для действий, которые передаются от червячка симулятору
+    /// </summary>
     public enum Actions
     {
-        Move, // двигаться
-        Budding, // размножаться
-        None // ничего не делать
+        /// <summary>двигаться</summary>
+        Move,
+        /// <summary>размножаться</summary>
+        Budding,
+        /// <summary>ничего не делать</summary>
+        None
     }
 }

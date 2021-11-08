@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ConsoleApp1.CoreGame.Interfaces;
+using Newtonsoft.Json;
 
 namespace ConsoleApp1.Network.Entity
 {

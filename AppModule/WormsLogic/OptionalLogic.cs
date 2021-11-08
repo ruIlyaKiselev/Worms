@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConsoleApp1.CoreGame.Enums;
+using ConsoleApp1.CoreGame.Interfaces;
 
 namespace ConsoleApp1.WormsLogic
 {
+    /// <summary>
+    ///     Реализация интерфейса IWormLogic.
+    ///     Является оптимальной логикой, то есть червь двигается к еде по кратчайшей траектории.
+    /// </summary>
     public class OptionalLogic: IWormLogic
     {
         public (Actions, Directions) Decide(IWormInfoProvider worm, IWorldInfoProvider infoProvider)
@@ -70,6 +76,18 @@ namespace ConsoleApp1.WormsLogic
             return (action, direction);
         }
         
+        /// <summary>
+        ///     Метод для поиска кратчайшего пути между двумя точками.
+        /// </summary>
+        /// <param name="wormCoords">
+        ///     Координата точки, от которой начинается отсчет.
+        /// </param>
+        /// <param name="infoProvider">
+        ///     Интерфейс с информацией о мире, предоставляющий информацию о еде в мире.
+        /// </param>
+        /// <returns>
+        ///     Возвращает координату еды, к которой самый краткий путь от переданной в аргументы точки wormCoords.
+        /// </returns>
         private static (int, int) GetNearestFoodCoord((int, int) wormCoords, IWorldInfoProvider infoProvider)
         {
             int minLength = 10000;
@@ -91,6 +109,18 @@ namespace ConsoleApp1.WormsLogic
             return nearestFoodCoord;
         }
 
+        /// <summary>
+        ///     Метод для проверки, есть ли вокруг червя место для размножения (хотя бы одна свободная клетка).
+        /// </summary>
+        /// <param name="wormCoords">
+        ///     Координата точки, от которой начинается отсчет.
+        /// </param>
+        /// <param name="infoProvider">
+        ///     Интерфейс с информацией о мире.
+        /// </param>
+        /// <returns>
+        ///     true - размножение возможно, иначе - false.
+        /// </returns>
         private static bool ThereIsAPlaceForBudding((int, int) wormCoords, IWorldInfoProvider infoProvider)
         {
             List<(int, int)> aroundPositionsList = new List<(int, int)>

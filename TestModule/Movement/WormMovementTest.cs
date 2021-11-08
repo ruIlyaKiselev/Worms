@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using ConsoleApp1;
-using ConsoleApp1.Exceptions;
+using ConsoleApp1.CoreGame.Domain;
+using ConsoleApp1.CoreGame.Enums;
+using ConsoleApp1.CoreGame.Exceptions;
 using ConsoleApp1.Generators;
 using ConsoleApp1.WormsLogic;
 using NUnit.Framework;

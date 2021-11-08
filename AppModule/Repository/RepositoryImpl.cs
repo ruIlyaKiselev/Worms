@@ -1,16 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ConsoleApp1.CoreGame.Domain;
+using ConsoleApp1.CoreGame.Enums;
+using ConsoleApp1.CoreGame.Interfaces;
 using ConsoleApp1.Database;
 using ConsoleApp1.Network;
 using ConsoleApp1.Network.Entity;
 
 namespace ConsoleApp1.Repository
 {
+    /// <summary>
+    ///     Класс-репозиторий. Имплементирует IRepository.
+    /// </summary>
     public class RepositoryImpl: IRepository
     {
         private PostgresDatabaseORM _postgresDatabase;
         private INetworkService _networkService;
 
+        /// <summary>
+        ///     Конструктор репозитория. Принимает базу данных и сервис API.
+        /// </summary>
+        /// <param name="database">
+        ///     Объект PostgresDatabaseORM. Должен быть проинициализирован и настроен заранее,
+        ///     репозиторий этим не занимается.
+        /// </param>
+        /// <param name="networkService">
+        ///     Имплементация интерфейса INetworkService. Должна быть проинициализирована и настроена заранее,
+        ///     репозиторий этим не занимается.
+        /// </param>
         public RepositoryImpl(PostgresDatabaseORM database, INetworkService networkService)
         {
             _postgresDatabase = database;

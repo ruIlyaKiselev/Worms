@@ -7,7 +7,9 @@ using Newtonsoft.Json;
 namespace ConsoleApp1.Generators
 {
     /// <summary>
-    /// RandomName class, used to generate a random name.
+    ///     RandomName class, used to generate a random name.
+    ///     Исходный код взят с https://github.com/duncanrhamill/RandomNameGen
+    ///     Внимание! Для работы в одной директории с исполняемым файлом должен быть файл names.json
     /// </summary>
     public class RandomNameGenerator: INameGenerator
     {

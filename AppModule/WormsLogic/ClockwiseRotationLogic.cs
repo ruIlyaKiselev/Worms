@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
+using ConsoleApp1.CoreGame.Enums;
+using ConsoleApp1.CoreGame.Interfaces;
 
 namespace ConsoleApp1.WormsLogic
 {
+    /// <summary>
+    ///     Реализация интерфейса IWormLogic.
+    ///     Является зацикленным перемещением по одним и тем же координатам в списке.
+    /// </summary>
     public class ClockwiseRotationLogic: IWormLogic
     {
         private readonly List<Directions> _directionsList = new();

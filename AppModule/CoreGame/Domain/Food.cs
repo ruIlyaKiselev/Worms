@@ -1,31 +1,38 @@
-﻿namespace ConsoleApp1
+﻿using ConsoleApp1.CoreGame.Interfaces;
+
+namespace ConsoleApp1.CoreGame.Domain
 {
-    /*
-     * класс для описания еды
-     */
+    /// <summary>
+    ///     Класс <c>Food</c> для описания еды. Имплементирует интерфейс <c>IFoodInfoProvider</c>
+    /// </summary>
     public class Food: IFoodInfoProvider
     {
-        /*
-         * конструктор
-         * для создания еды необходимо передать ей её координаты, которые сгенерированы в генераторе
-         */
+        /// <summary>
+        ///     Конструктор <c>Food</c> принимает позицию, где еда появится.
+        /// </summary>
+        /// <param name="currentPosition">
+        ///     Пара (int, int) - координаты червя по X и по Y в мире.
+        /// </param>
         public Food((int, int) currentPosition)
         {
-            Health = 10;
+            Health = GameContract.StartFoodHealth;
             IsDeath = false;
             CurrentPosition = currentPosition;
         }
 
-        public int Health { get; private set; }
-
+        /// <value>Property <c>Health</c> хранит в себе очки здоровья данной еды.</value>
+        public int Health { get; set; }
+        /// <value>Property <c>CurrentPosition</c> хранит в себе координаты в мире данной еды.</value>
         public (int, int) CurrentPosition { get; set; }
+        /// <value>Property <c>IsDeath</c> хранит в себе информацию, испорчена ли еда (true - если испорчена).</value>
+        public bool IsDeath { get; set; }
 
-        public bool IsDeath { get; private set; }
-
-        /*
-         * метод для уменьшения числа ходов, через которые еда "протухнет"; когда ходы закончатся, еда помечается через
-         * boolean проперти как мертвая, после чего симулятор (игровой контроллер) её уничтожит уже извне
-         */
+        /// <summary>
+        ///     Метод для декремента здоровья после хода игры.
+        /// </summary>
+        ///  <returns>
+        ///     Возвращает true, если еда испортилась, иначе false.
+        /// </returns>
         public bool DecreaseHealth()
         {
             Health -= 1;
