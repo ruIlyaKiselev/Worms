@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "qXKZmTBnvJw7sAkvBnVeCUXMztRvK5SN/NffV1Xvia+tSGPrwuCvOs7m1bEaxs8+QgRBuanhB4n61wiOyFBZCg==",
+  "dgSpecHash": "7mkUe7sRRjjtFkxQVJCJd9SkJh0F2HG2HBpds9D8XaCnF3JplmUpPQaCiLtG+DRiaBW4VeVBpaVL1/P6PakejQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\ruily_g40rtk5\\RiderProjects\\ConsoleApp1\\NetworkModule\\NetworkModule.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\documentformat.openxml\\2.14.0\\documentformat.openxml.2.14.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
@@ -121,6 +122,7 @@
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.io.filesystem\\4.3.0\\system.io.filesystem.4.3.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.io.packaging\\4.7.0\\system.io.packaging.4.7.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.linq.expressions\\4.3.0\\system.linq.expressions.4.3.0.nupkg.sha512",
     "C:\\Users\\ruily_g40rtk5\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",

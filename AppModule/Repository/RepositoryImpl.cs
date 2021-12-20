@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.CoreGame.Domain;
 using ConsoleApp1.CoreGame.Enums;
@@ -12,7 +13,7 @@ namespace ConsoleApp1.Repository
     /// <summary>
     ///     Класс-репозиторий. Имплементирует IRepository.
     /// </summary>
-    public class RepositoryImpl: IRepository
+    public class RepositoryImpl: IRepository, IDisposable
     {
         private PostgresDatabaseORM _postgresDatabase;
         private INetworkService _networkService;
@@ -108,6 +109,11 @@ namespace ConsoleApp1.Repository
             }
 
             return (action, direction);
+        }
+
+        public void Dispose()
+        {
+            _postgresDatabase.Dispose();
         }
     }
 }
